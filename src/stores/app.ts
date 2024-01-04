@@ -7,14 +7,20 @@ export type Notification = {
 }
 
 export type RootState = {
-    drawer: boolean | null
+    drawer: {
+        menu: boolean
+        settings: boolean
+    }
     notifications: Notification[]
 }
 
 export const useAppStore = defineStore('app', {
     state: () =>
         ({
-            drawer: null,
+            drawer: {
+                menu: false,
+                settings: false
+            },
             notifications: []
         }) as RootState,
     actions: {

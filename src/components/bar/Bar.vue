@@ -3,7 +3,7 @@
         <template #prepend>
             <app-bar-logo />
 
-            <app-btn v-if="mdAndDown" icon="mdi-menu" @click="app.drawer = !app.drawer" />
+            <app-btn v-if="mdAndDown" icon="mdi-menu" @click="app.drawer.menu = !app.drawer.menu" />
         </template>
 
         <template #append>
@@ -12,6 +12,7 @@
             <template v-if="!user.settings.quickbar">
                 <app-vertical-divider v-if="smAndUp" class="ms-3 me-2" />
                 <app-bar-language-menu v-if="smAndUp" />
+                <app-bar-settings-toggle />
             </template>
 
             <app-vertical-divider v-if="lgAndUp" class="ms-2 me-3" />
@@ -23,8 +24,9 @@
 import { computed } from 'vue'
 import { useDisplay, useTheme } from 'vuetify'
 
-import AppBarLogo from './bar/AppLogo.vue'
-import AppBarLanguageMenu from './bar/AppLanguageMenu.vue'
+import AppBarLogo from './Logo.vue'
+import AppBarLanguageMenu from './LanguageMenu.vue'
+import AppBarSettingsToggle from './SettingsToggle.vue'
 
 import { useAppStore } from 'src/stores/app'
 import { useUserStore } from 'src/stores/user'

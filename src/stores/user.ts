@@ -5,9 +5,16 @@ import { preferredLocale } from 'src/shared/routes'
 import { getToken, removeToken, setToken } from 'src/shared/cookie'
 
 export interface UserSettings {
+    theme: string
     locale: string
     quickbar: boolean
 }
+
+const createDefaultUserSettings = () => ({
+    theme: 'light',
+    locale: preferredLocale(),
+    quickbar: false
+})
 
 interface UserInfomation {
     name: string
@@ -16,11 +23,6 @@ interface UserInfomation {
     settings: UserSettings
     introduction: string
 }
-
-const createDefaultUserSettings = () => ({
-    locale: preferredLocale(),
-    quickbar: false
-})
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -38,6 +40,7 @@ export const useUserStore = defineStore('user', {
             this.settings = settings
             this.introduction = introduction
             setToken(token)
+            this.setLocale(settings.locale)
         },
         setLocale(locale: string) {
             if (this.settings.locale === locale) return

@@ -30,3 +30,4 @@ const items = computed(() => [
     { title: t('more-coming-soon'), disabled: true }
 ])
 </script>
+src/plugins/i18n/locales

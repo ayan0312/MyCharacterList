@@ -1,4 +1,19 @@
 {
+    "theme": "主题",
+    "custom-theme": "自定义主题",
+    "theme-message": "使用浅色和深色主题以及两者的组合自定义您的文档体验。",
+    "themes": {
+        "light": "浅色",
+        "dark": "深色",
+        "system": "自动",
+        "blackguard": "黑色守卫"
+    },
+    "general": "常规",
+    "general-message": "更多即将推出...",
+    "settings": "设置",
     "translations": "翻译",
-    "more-coming-soon": "更多即将推出..."
+    "more-coming-soon": "更多即将推出...",
+    "latest-commit": "最新提交",
+    "latest-release": "最新版本",
+    "latest-documentation": "最新文档"
 }

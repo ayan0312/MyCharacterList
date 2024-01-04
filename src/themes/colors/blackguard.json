@@ -1,0 +1,14 @@
+{
+    "dark": true,
+    "colors": {
+        "background": "#0f0c24",
+        "primary": "#e7810d",
+        "surface": "#1e184a",
+        "on-surface-variant": "#4c219e",
+        "info": "#9c27b0",
+        "accent": "#FF4081",
+        "success": "#84b38a",
+        "surface-bright": "#362b89"
+    },
+    "variables": { "theme-code": "#15123d" }
+}

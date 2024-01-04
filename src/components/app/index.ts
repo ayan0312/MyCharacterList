@@ -1,8 +1,9 @@
-import AppBtn from './AppBtn.vue'
-import AppList from './AppList.vue'
-import AppMenu from './AppMenu.vue'
-import AppSheet from './AppSheet.vue'
-import AppVerticalDivider from './AppVerticalDivider.vue'
+import AppBtn from './Button.vue'
+import AppList from './List.vue'
+import AppMenu from './Menu.vue'
+import AppSheet from './Sheet.vue'
+import AppLinkListItem from './LinkListItem.vue'
+import AppVerticalDivider from './VerticalDivider.vue'
 
 import type { App } from 'vue'
 
@@ -12,6 +13,7 @@ export default {
             .component('AppList', AppList)
             .component('AppMenu', AppMenu)
             .component('AppSheet', AppSheet)
+            .component('AppLinkListItem', AppLinkListItem)
             .component('AppVerticalDivider', AppVerticalDivider)
     }
 }

@@ -11,8 +11,9 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import App from './App.vue'
 import i18n from './i18n'
-import globalComponents from './components'
+import globalAppComponents from './components/app'
 import { myCharacterListCore } from './core'
+import { customThemes } from './themes'
 
 const app = createApp(App)
 
@@ -24,6 +25,9 @@ const vuetify = createVuetify({
             mdi
         }
     },
+    theme: {
+        themes: customThemes
+    },
     components,
     directives
 })
@@ -31,7 +35,7 @@ const vuetify = createVuetify({
 app.use(createPinia())
 app.use(i18n)
 app.use(vuetify)
-app.use(globalComponents)
+app.use(globalAppComponents)
 app.use(myCharacterListCore)
 
 app.mount('#app')

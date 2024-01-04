@@ -43,7 +43,6 @@
     "browse-components": "Browse Components",
     "dark-code": "Dark code blocks",
     "dark-code-message": "Change all code blocks to use a dark theme.",
-    "documentation-build": "Documentation Build",
     "business": "Business",
     "cancel": "Cancel",
     "close": "Close",
@@ -161,8 +160,6 @@
     "framework-services": "Framework services",
     "functional": "Functional",
     "funding": "Funding",
-    "general": "General",
-    "general-message": "Enable composition API for examples, show component API inline, and more.",
     "getting-started": "Getting started",
     "get-help": "Get help",
     "github": "GitHub",
@@ -189,8 +186,7 @@
     "laptop": "Laptop",
     "languages": "Languages",
     "large": "Large",
-    "latest-commit": "Latest commit",
-    "latest-release": "Latest release",
+
     "latest-releases": "Latest releases",
     "layout": "Layout",
     "layout-link": "Link to layout for {name}",
@@ -221,7 +217,6 @@
     "missing": "Could not load example `{file}`",
     "mit-license": "MIT License",
     "mixed": "Mixed",
-    "more-coming-soon": "More coming soon...",
     "my-dashboard": "My Dashboard",
     "name": "Name",
     "navigation": "Navigation",
@@ -289,7 +284,6 @@
     "see-more-themes-from": "See More Themes From {vendor}",
     "selection": "Selection",
     "services": "Services",
-    "settings": "Settings",
     "slash-search": "Use / for Search hotkey",
     "slash-search-message": "This option sets the bound search key to '/' from Cmd/Ctrl+K.",
     "small": "Small",
@@ -312,9 +306,7 @@
     "team": "Team",
     "template": "Template",
     "text": "Text",
-    "theme": "Theme",
-    "theme-message": "Customize your documentation experience with light and dark themes, as well as a combination of both named.",
-    "themes": "Themes",
+
     "tidelift": {
         "demo": "Request a demo",
         "more": "Learn more"
@@ -322,7 +314,6 @@
     "toggle": "Toggle {0}",
     "tools": "Tools",
     "transition": "Transition",
-    "translations": "Translations",
     "type": "Type | Types",
     "types": "Types",
     "twitter": "Twitter",
@@ -341,5 +332,23 @@
     "view-source": "View source",
     "viewport": "Viewport",
     "vuetify": "Vuetify",
-    "x": "X"
+    "x": "X",
+
+    "theme": "Theme",
+    "custom-theme": "Custom theme",
+    "theme-message": "Customize your documentation experience with light and dark themes, as well as a combination of both named.",
+    "themes": {
+        "light": "light",
+        "dark": "dark",
+        "system": "system",
+        "blackguard": "blackguard"
+    },
+    "general": "General",
+    "general-message": "More coming soon...",
+    "settings": "Settings",
+    "translations": "Translations",
+    "more-coming-soon": "More coming soon...",
+    "latest-commit": "Latest commit",
+    "latest-release": "Latest release",
+    "latest-documentation": "Latest documentation"
 }

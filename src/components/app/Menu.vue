@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import type { Item } from './AppList.vue'
+import type { Item } from './List.vue'
 
 defineProps({
     items: {

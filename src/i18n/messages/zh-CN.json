@@ -1,7 +1,10 @@
 {
+    "esc": "Esc",
+    "open": "打开",
     "theme": "主题",
     "custom-theme": "自定义主题",
     "theme-message": "使用浅色和深色主题以及两者的组合自定义您的文档体验。",
+    "theme-generator": "主题生成器",
     "themes": {
         "light": "浅色",
         "dark": "深色",
@@ -15,14 +18,23 @@
         "logout": "登出",
         "subtitle": "请使用您的本地帐户登录或注册。"
     },
+    "search": {
+        "label": "搜索",
+        "looking": "寻找……",
+        "key-hint": "Ctrl+K",
+        "key-hint-mac": "Cmd+K",
+        "results": "搜索结果",
+        "no-results": "没有找到结果",
+        "recent": "最近搜索"
+    },
     "done": "无",
     "read": "查看已读 ({number})",
     "unread": "查看未读 ({number})",
     "general": "常规",
-    "general-message": "更多即将推出...",
+    "general-message": "更多即将推出……",
     "settings": "设置",
     "translations": "翻译",
-    "more-coming-soon": "更多即将推出...",
+    "more-coming-soon": "更多即将推出……",
     "latest-commit": "最新提交",
     "latest-release": "最新版本",
     "latest-documentation": "最新文档"

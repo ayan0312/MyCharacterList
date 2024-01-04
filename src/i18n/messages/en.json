@@ -143,7 +143,6 @@
     "enable-pwa-refresh-message": "Display the refresh prompt when new documentation updates have been downloaded.",
     "enterprise": "Enterprise",
     "email-address": "Email address",
-    "esc": "Esc",
     "extra-extra-large": "Extra extra large",
     "extra-large": "Extra large",
     "extra-small": "Extra small",
@@ -251,17 +250,6 @@
     "rtl": "RTL",
     "scroll-to-top": "Scroll to top",
     "sass-variables": "SASS Variables",
-    "search": {
-        "icons": "Search for icons (e.g. account, close)",
-        "label": "Search",
-        "looking": "Looking for",
-        "key-hint": "Ctrl+K",
-        "key-hint-mac": "Cmd+K",
-        "key-hint-slash": "Press /",
-        "results": "Your search results will appear here",
-        "no-results": "No results found",
-        "recent": "Recent"
-    },
     "search-api": "Search API",
     "search-jobs": "Search Jobs",
     "search-sass-api": "Search SASS Variables",
@@ -319,9 +307,12 @@
     "vuetify": "Vuetify",
     "x": "X",
 
+    "esc": "Esc",
+    "open": "Open",
     "theme": "Theme",
     "custom-theme": "Custom theme",
     "theme-message": "Customize your documentation experience with light and dark themes, as well as a combination of both named.",
+    "theme-generator": "Theme Generator",
     "themes": {
         "light": "light",
         "dark": "dark",
@@ -334,6 +325,15 @@
         "login": "Log in",
         "logout": "Log out",
         "subtitle": "Sign in with GitHub or Discord to save your settings and unlock exclusive subscriber perks."
+    },
+    "search": {
+        "label": "Search",
+        "looking": "Looking for",
+        "key-hint": "Ctrl+K",
+        "key-hint-mac": "Cmd+K",
+        "results": "Your search results will appear here",
+        "no-results": "No results found",
+        "recent": "Recent"
     },
     "read": "View Read ({number})",
     "unread": "View Unread ({number})",

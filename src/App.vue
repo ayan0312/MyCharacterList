@@ -29,14 +29,39 @@ watch(
     },
     { immediate: true }
 )
+
+function isNightTime(): boolean {
+    const currentDate = new Date()
+    const currentHour = currentDate.getHours()
+    return currentHour >= 20 || currentHour < 6
+}
+
+function isDarkMode(media: MediaQueryList): boolean {
+    const prefersDarkMode = media!.matches
+
+    return prefersDarkMode
+}
+
 function onThemeChange() {
-    systemTheme.value = media!.matches ? 'dark' : 'light'
+    systemTheme.value = isDarkMode(media) ? 'dark' : 'light'
 }
 
 watchEffect(() => {
-    theme.global.name.value =
-        user.settings.theme === 'system' ? systemTheme.value : user.settings.theme
+    switch (user.settings.theme) {
+        case 'system':
+            theme.global.name.value = systemTheme.value
+            break
+        case 'time':
+            theme.global.name.value = isNightTime() ? 'dark' : 'light'
+            break
+        default:
+            theme.global.name.value = user.settings.theme
+    }
 })
+
+window.onbeforeunload = function () {
+    if (!user.token) localStorage.setItem('settings', JSON.stringify(user.settings))
+}
 </script>
 
 <style lang="sass"></style>

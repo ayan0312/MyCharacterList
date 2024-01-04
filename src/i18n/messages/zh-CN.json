@@ -5,9 +5,13 @@
     "themes": {
         "light": "浅色",
         "dark": "深色",
+        "time": "时间",
         "system": "自动",
         "blackguard": "黑色守卫"
     },
+    "done": "无",
+    "read": "查看已读 ({number})",
+    "unread": "查看未读 ({number})",
     "general": "常规",
     "general-message": "更多即将推出...",
     "settings": "设置",

@@ -11,6 +11,7 @@
 
             <template v-if="!user.settings.quickbar">
                 <app-vertical-divider v-if="smAndUp" class="ms-3 me-2" />
+                <app-bar-notifications-menu />
                 <app-bar-language-menu v-if="smAndUp" />
                 <app-bar-settings-toggle />
             </template>
@@ -27,6 +28,7 @@ import { useDisplay, useTheme } from 'vuetify'
 import AppBarLogo from './Logo.vue'
 import AppBarLanguageMenu from './LanguageMenu.vue'
 import AppBarSettingsToggle from './SettingsToggle.vue'
+import AppBarNotificationsMenu from './NotificationsMenu.vue'
 
 import { useAppStore } from 'src/stores/app'
 import { useUserStore } from 'src/stores/user'

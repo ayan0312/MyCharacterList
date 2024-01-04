@@ -35,6 +35,11 @@ const items = [
         value: 'dark'
     },
     {
+        text: 'themes.time',
+        icon: 'mdi-clock-time-eight-outline',
+        value: 'time'
+    },
+    {
         text: 'themes.system',
         icon: 'mdi-desktop-tower-monitor',
         value: 'system'

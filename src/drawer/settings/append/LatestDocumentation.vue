@@ -2,7 +2,7 @@
     <app-link-list-item
         v-if="commits.latest"
         :append-icon="appendIcon"
-        :href="`https://github.com/ayan0312/MyCharacterList/tree/${commits.latest?.sha}`"
+        :href="`${GITHUB_REPO}/tree/${commits.latest?.sha}`"
         :title="commits.latest?.sha.slice(0, 7)"
         :label="t('latest-documentation')"
         :prepend-icon="prependIcon"
@@ -19,6 +19,7 @@ import { useCommitsStore } from 'src/stores/commits'
 
 const commits = useCommitsStore()
 const { t } = useI18n()
+const GITHUB_REPO = import.meta.env.VITE_GITHUB_REPOSITORY_URL
 
 defineProps({
     prependIcon: {

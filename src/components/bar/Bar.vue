@@ -17,6 +17,7 @@
             </template>
 
             <app-vertical-divider v-if="lgAndUp" class="ms-2 me-3" />
+            <app-bar-login />
         </template>
     </v-app-bar>
 </template>
@@ -26,6 +27,7 @@ import { computed } from 'vue'
 import { useDisplay, useTheme } from 'vuetify'
 
 import AppBarLogo from './Logo.vue'
+import AppBarLogin from './Login.vue'
 import AppBarLanguageMenu from './LanguageMenu.vue'
 import AppBarSettingsToggle from './SettingsToggle.vue'
 import AppBarNotificationsMenu from './NotificationsMenu.vue'

@@ -15,6 +15,7 @@ const theme = useTheme()
 const systemTheme = ref('light')
 
 let media: MediaQueryList
+let timer: number
 
 watch(
     () => user.settings.theme,
@@ -23,12 +24,28 @@ watch(
             media = window.matchMedia('(prefers-color-scheme: dark)')
             media.addListener(onThemeChange)
             onThemeChange()
-        } else if (media) {
-            media.removeListener(onThemeChange)
-        }
+        } else if (media) media.removeListener(onThemeChange)
+
+        if (val === 'time') {
+            timer = setInterval(onTimeChange, 5 * 60 * 1000)
+            onTimeChange()
+        } else if (timer) clearInterval(timer)
     },
     { immediate: true }
 )
+
+function onTimeChange() {
+    systemTheme.value = isNightTime() ? 'dark' : 'light'
+}
+
+function onThemeChange() {
+    systemTheme.value = isDarkMode(media) ? 'dark' : 'light'
+}
+
+function isDarkMode(media: MediaQueryList): boolean {
+    const prefersDarkMode = media!.matches
+    return prefersDarkMode
+}
 
 function isNightTime(): boolean {
     const currentDate = new Date()
@@ -36,23 +53,11 @@ function isNightTime(): boolean {
     return currentHour >= 20 || currentHour < 6
 }
 
-function isDarkMode(media: MediaQueryList): boolean {
-    const prefersDarkMode = media!.matches
-
-    return prefersDarkMode
-}
-
-function onThemeChange() {
-    systemTheme.value = isDarkMode(media) ? 'dark' : 'light'
-}
-
 watchEffect(() => {
     switch (user.settings.theme) {
+        case 'time':
         case 'system':
             theme.global.name.value = systemTheme.value
-            break
-        case 'time':
-            theme.global.name.value = isNightTime() ? 'dark' : 'light'
             break
         default:
             theme.global.name.value = user.settings.theme
@@ -63,5 +68,4 @@ window.onbeforeunload = function () {
     if (!user.token) localStorage.setItem('settings', JSON.stringify(user.settings))
 }
 </script>
-
 <style lang="sass"></style>

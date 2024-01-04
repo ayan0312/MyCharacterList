@@ -1,4 +1,4 @@
-import AppBtn from './Button.vue'
+import AppBtn from './Btn.vue'
 import AppList from './List.vue'
 import AppMenu from './Menu.vue'
 import AppSheet from './Sheet.vue'

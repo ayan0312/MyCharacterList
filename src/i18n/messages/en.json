@@ -194,18 +194,6 @@
     "light": "Light",
     "link-only": "Link Only",
     "load-more": "Load more...",
-    "login": {
-        "login": "Log in",
-        "logout": "Log out",
-        "to-vuetify": "Log in to Vuetify",
-        "welcome-back": "Welcome back!",
-        "tagline": "Sign in with GitHub or Discord to save your settings and unlock exclusive subscriber perks.",
-        "last-used": "Last used",
-        "with-github": "Continue with GitHub",
-        "with-discord": "Continue with Discord",
-        "connect-github": "Connect GitHub",
-        "connect-discord": "Connect Discord"
-    },
     "logo": "Logo",
     "ltr": "LTR",
     "marked-read": "Mark all read",
@@ -340,6 +328,12 @@
         "time": "time",
         "system": "system",
         "blackguard": "blackguard"
+    },
+    "login": {
+        "title": "Login/Register",
+        "login": "Log in",
+        "logout": "Log out",
+        "subtitle": "Sign in with GitHub or Discord to save your settings and unlock exclusive subscriber perks."
     },
     "read": "View Read ({number})",
     "unread": "View Unread ({number})",

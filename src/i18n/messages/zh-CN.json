@@ -9,6 +9,12 @@
         "system": "自动",
         "blackguard": "黑色守卫"
     },
+    "login": {
+        "title": "登录/注册",
+        "login": "登录",
+        "logout": "登出",
+        "subtitle": "请使用您的本地帐户登录或注册。"
+    },
     "done": "无",
     "read": "查看已读 ({number})",
     "unread": "查看未读 ({number})",

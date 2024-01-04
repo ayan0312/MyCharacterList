@@ -2,8 +2,9 @@
     <v-app-bar id="app-bar" :image="image" border="b" flat>
         <template #prepend>
             <app-bar-logo />
-
+            <app-vertical-divider v-if="lgAndUp" class="ms-3 me-2" />
             <app-btn v-if="mdAndDown" icon="mdi-menu" @click="app.drawer.menu = !app.drawer.menu" />
+            <app-search />
         </template>
 
         <template #append>
@@ -26,6 +27,7 @@
 import { computed } from 'vue'
 import { useDisplay, useTheme } from 'vuetify'
 
+import AppSearch from 'src/components/search/Search.vue'
 import AppBarLogo from './Logo.vue'
 import AppBarLogin from './Login.vue'
 import AppBarLanguageMenu from './LanguageMenu.vue'

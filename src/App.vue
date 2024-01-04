@@ -43,7 +43,7 @@ function onThemeChange() {
 }
 
 function isDarkMode(media: MediaQueryList): boolean {
-    const prefersDarkMode = media!.matches
+    const prefersDarkMode = media.matches
     return prefersDarkMode
 }
 

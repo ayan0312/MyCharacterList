@@ -2,6 +2,7 @@ import AppBtn from './Btn.vue'
 import AppList from './List.vue'
 import AppMenu from './Menu.vue'
 import AppSheet from './Sheet.vue'
+import AppTextField from './TextField.vue'
 import AppTooltipBtn from './TooltipBtn.vue'
 import AppLinkListItem from './LinkListItem.vue'
 import AppVerticalDivider from './VerticalDivider.vue'
@@ -14,6 +15,7 @@ export default {
             .component('AppList', AppList)
             .component('AppMenu', AppMenu)
             .component('AppSheet', AppSheet)
+            .component('AppTextField', AppTextField)
             .component('AppTooltipBtn', AppTooltipBtn)
             .component('AppLinkListItem', AppLinkListItem)
             .component('AppVerticalDivider', AppVerticalDivider)

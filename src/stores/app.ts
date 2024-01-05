@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import navItems from './data_navItems'
+import type { ListItem } from 'src/components/app/List.vue'
 
 export type Notification = {
     color?: string
@@ -7,6 +9,7 @@ export type Notification = {
 }
 
 export type RootState = {
+    items: ListItem[]
     drawer: {
         menu: boolean
         settings: boolean
@@ -17,8 +20,9 @@ export type RootState = {
 export const useAppStore = defineStore('app', {
     state: () =>
         ({
+            items: Array.from(navItems),
             drawer: {
-                menu: false,
+                menu: true,
                 settings: false
             },
             notifications: []

@@ -17,11 +17,11 @@
         <v-divider />
 
         <v-container class="px-3 py-3">
-            <settings-drawer-options />
+            <settings-options />
         </v-container>
 
         <template #append>
-            <settings-drawer-append />
+            <settings-append />
         </template>
     </v-navigation-drawer>
 </template>
@@ -30,8 +30,8 @@
 import { useRtl } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 
-import SettingsDrawerAppend from './settings/DrawerAppend.vue'
-import SettingsDrawerOptions from './settings/DrawerOptions.vue'
+import SettingsAppend from './DrawerAppend.vue'
+import SettingsOptions from './DrawerOptions.vue'
 
 import { useAppStore } from 'src/stores/app'
 

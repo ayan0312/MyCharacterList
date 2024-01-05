@@ -10,5 +10,8 @@
         "success": "#84b38a",
         "surface-bright": "#362b89"
     },
-    "variables": { "theme-code": "#15123d" }
+    "variables": { "theme-code": "#15123d" },
+    "background-images": {
+        "default": "https://cdn.vuetifyjs.com/docs/images/themes/blackguard-app-bar.png"
+    }
 }

@@ -1,12 +1,19 @@
 <template>
-    <layouts-home />
+    <v-app>
+        <app-bar />
+        <app-menu-drawer />
+        <app-settings-drawer />
+        <v-main class="text-center font-weight-light"> content </v-main>
+    </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
-import LayoutsHome from 'src/layouts/home.vue'
+import AppBar from 'src/components/bar/Bar.vue'
+import AppMenuDrawer from 'src/drawer/menu/Menu.vue'
+import AppSettingsDrawer from 'src/drawer/settings/Settings.vue'
 
 import { useUserStore } from './stores/user'
 

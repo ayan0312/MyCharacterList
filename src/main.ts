@@ -11,9 +11,9 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import App from './App.vue'
 import i18n from './i18n'
-import globalAppComponents from './components/app'
-import { myCharacterListCore } from './core'
 import { customThemes } from './themes'
+import { myCharacterListCore } from './core'
+import globalAppComponents from './components/app'
 
 const app = createApp(App)
 

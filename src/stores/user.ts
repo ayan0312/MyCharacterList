@@ -1,9 +1,21 @@
 import { defineStore } from 'pinia'
 
 import locales from 'src/i18n/locales'
-import { preferredLocale } from 'src/shared/routes'
 import { getToken, removeToken, setToken } from 'src/shared/cookie'
 import type { User } from 'src/apis/user'
+
+function preferredLocale(locale = 'en') {
+    const languages = ([] as string[]).concat(
+        window.localStorage.getItem('currentLocale') || [],
+        navigator.languages || []
+    )
+
+    const language =
+        languages.find((l) =>
+            locales.some((locale) => locale.enabled && l === (locale.alternate || locale.locale))
+        ) || locale
+    return language
+}
 
 const createDefaultUserSettings = () => {
     const settings = localStorage.getItem('settings')

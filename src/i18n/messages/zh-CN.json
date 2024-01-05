@@ -20,7 +20,7 @@
     },
     "search": {
         "label": "搜索",
-        "looking": "寻找……",
+        "looking": "查找……",
         "key-hint": "Ctrl+K",
         "key-hint-mac": "Cmd+K",
         "results": "搜索结果",

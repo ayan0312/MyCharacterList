@@ -49,25 +49,25 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Prop } from 'vue'
 
-export type Item = {
+export type ListItem = {
+    href?: string
+    items?: (string | ListItem)[]
     title?: string
+    onClick?: () => void
+    divider?: boolean
     subtitle?: string
+    disabled?: boolean
+    subfolder?: string
+    subheader?: string
+    routePath?: string
+    routeMatch?: string
     appendIcon?: string
     activeIcon?: string
-    inactiveIcon?: string
-    items?: (string | Item)[]
-    subheader?: string
-    divider?: boolean
-    href?: string
-    subfolder?: string
-    disabled?: boolean
-    routeMatch?: string
-    routePath?: string
     emphasized?: boolean
-    onClick?: () => void
+    inactiveIcon?: string
 }
 
-function generateListItem(item: string | Item): any {
+function generateListItem(item: string | ListItem): any {
     const isString = typeof item === 'string'
     const isParent = !isString && item.items
     const isType = !isString && (item.divider || item.subheader)
@@ -102,7 +102,7 @@ function generateListItem(item: string | Item): any {
     return item
 }
 
-function generateListItems(item: Item): any {
+function generateListItems(item: ListItem): any {
     if (!item.items) return undefined
     return item.items.map((child) => generateListItem(child))
 }
@@ -111,7 +111,7 @@ const props = defineProps({
     items: {
         type: Array,
         default: () => []
-    } as Prop<Item[]>,
+    } as Prop<ListItem[]>,
     nav: Boolean
 })
 

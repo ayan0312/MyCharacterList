@@ -1,0 +1,7 @@
+import type { IName } from './name.interface'
+
+export interface IStoryVolume extends IName {
+    intro?: string
+    storyId?: number
+    deletable?: boolean
+}

@@ -13,11 +13,11 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import type { Item } from './List.vue'
+import type { ListItem } from './List.vue'
 
 defineProps({
     items: {
-        type: Array as PropType<Item[]>,
+        type: Array as PropType<ListItem[]>,
         default: () => []
     }
 })

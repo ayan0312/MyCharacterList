@@ -3,6 +3,9 @@
         <app-bar />
         <app-menu-drawer />
         <app-settings-drawer />
+        
+        <back-to-top />
+        <snackbar-queue />
         <v-main class="text-center font-weight-light"> content </v-main>
     </v-app>
 </template>
@@ -12,7 +15,9 @@ import { ref, watch, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
 import AppBar from 'src/components/bar/Bar.vue'
+import BackToTop from 'src/components/BackToTop.vue'
 import AppMenuDrawer from 'src/drawer/menu/Menu.vue'
+import SnackbarQueue from 'src/components/SnackbarQueue.vue'
 import AppSettingsDrawer from 'src/drawer/settings/Settings.vue'
 
 import { useUserStore } from './stores/user'

@@ -67,7 +67,7 @@ export type Item = {
     onClick?: () => void
 }
 
-function generateListItem(item: string | Item, locale = 'en', t = (key: string) => key): any {
+function generateListItem(item: string | Item): any {
     const isString = typeof item === 'string'
     const isParent = !isString && item.items
     const isType = !isString && (item.divider || item.subheader)
@@ -77,6 +77,7 @@ function generateListItem(item: string | Item, locale = 'en', t = (key: string) 
 
         return {
             title: litem.title,
+            href: litem.href,
             subtitle: litem.subtitle && te(litem.subtitle) ? t(litem.subtitle) : litem.subtitle,
             emphasized: false,
             disabled: true
@@ -87,23 +88,23 @@ function generateListItem(item: string | Item, locale = 'en', t = (key: string) 
         }
     } else if (item.subheader) {
         return {
-            title: t(item.subheader!),
+            title: t(item.subheader),
             type: 'subheader'
         }
     } else if (item.items) {
         return {
             title: t(item.title!),
             emphasized: item.emphasized,
-            children: item.items.map((item) => generateListItem(item, locale, t))
+            children: item.items.map((item) => generateListItem(item))
         }
     }
 
     return item
 }
 
-function generateListItems(item: Item, locale: string, t: (key: string) => string): any {
+function generateListItems(item: Item): any {
     if (!item.items) return undefined
-    return item.items.map((child) => generateListItem(child, locale, t))
+    return item.items.map((child) => generateListItem(child))
 }
 
 const props = defineProps({
@@ -114,7 +115,7 @@ const props = defineProps({
     nav: Boolean
 })
 
-const { t, te, locale } = useI18n()
+const { t, te } = useI18n()
 const opened = ref<string[]>([])
 
 const computedItems = computed(
@@ -132,7 +133,7 @@ const computedItems = computed(
                 onClick: item?.onClick,
                 rel: item.href ? 'noopener noreferrer' : undefined,
                 target: item.href ? '_blank' : undefined,
-                children: generateListItems(item, locale.value, t),
+                children: generateListItems(item),
                 prependIcon: opened.value.includes(title ?? '')
                     ? item.activeIcon
                     : item.inactiveIcon,

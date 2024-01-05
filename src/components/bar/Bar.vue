@@ -8,7 +8,9 @@
         </template>
 
         <template #append>
-            <template v-if="mdAndUp"></template>
+            <template v-if="mdAndUp">
+                <app-bar-support-menu />
+            </template>
 
             <template v-if="!user.settings.quickbar">
                 <app-vertical-divider v-if="smAndUp" class="ms-3 me-2" />
@@ -30,6 +32,7 @@ import { useDisplay, useTheme } from 'vuetify'
 import AppSearch from 'src/components/search/Search.vue'
 import AppBarLogo from './Logo.vue'
 import AppBarLogin from './Login.vue'
+import AppBarSupportMenu from './SupportMenu.vue'
 import AppBarLanguageMenu from './LanguageMenu.vue'
 import AppBarSettingsToggle from './SettingsToggle.vue'
 import AppBarNotificationsMenu from './NotificationsMenu.vue'

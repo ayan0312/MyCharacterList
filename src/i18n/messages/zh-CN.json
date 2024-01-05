@@ -37,5 +37,11 @@
     "more-coming-soon": "更多即将推出……",
     "latest-commit": "最新提交",
     "latest-release": "最新版本",
-    "latest-documentation": "最新文档"
+    "latest-documentation": "最新文档",
+    "faq": "常见问题",
+    "help": "帮助",
+    "about": "关于",
+    "github-issues": "GitHub issues",
+    "file-a-bug-report": "提交错误报告",
+    "check-for-updates": "检查更新"
 }

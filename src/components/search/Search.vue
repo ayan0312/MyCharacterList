@@ -42,7 +42,7 @@
                 variant="filled"
             >
                 <template #append-inner>
-                    <app-btn border size="small">
+                    <app-btn border size="small" @Click="model = false">
                         <span class="text-caption text-disabled">{{ t('esc') }}</span>
                     </app-btn>
                 </template>

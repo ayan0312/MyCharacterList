@@ -1,0 +1,167 @@
+import type { RouteRecordRaw } from 'vue-router'
+
+import { router } from 'src/router'
+import type { ListItem } from 'src/components/app/List.vue'
+import { useAppStore } from 'src/stores/app'
+import type { App, Component } from 'vue'
+
+/**
+ * The raw extension record.
+ */
+export interface ExtensionRecordRaw {
+    /**
+     * The name of the extension.
+     */
+    name: string
+    /**
+     * The uuid of the extension.
+     */
+    uuid: string
+    /**
+     * The routes of the app.
+     */
+    route?: RouteRecordRaw
+    /**
+     * The version of the extension.
+     */
+    version: number
+    /**
+     * The nav items of the navigation bar.
+     */
+    navItems?: ListItem[]
+    /**
+     * i18n messages.
+     */
+    messages?: Record<string, Record<string, string>>
+    /**
+     * The global components.
+     */
+    component?: ExtensionRecordComponentOptions
+}
+
+/**
+ * The component options.
+ */
+interface ExtensionRecordComponentOptions {
+    /**
+     * The root name of the components.
+     * @example If the root name is `App` and the component name is `Home`,
+     * the final component name will be `AppHome`.
+     */
+    root: string
+    /**
+     * The global components.
+     */
+    components: Record<string, Component>
+}
+
+export class Extension implements ExtensionRecordRaw {
+    public readonly name: string
+    public readonly uuid: string
+    public readonly route?: RouteRecordRaw
+    public readonly version: number
+    public readonly navItems?: ListItem[]
+    public readonly component?: ExtensionRecordComponentOptions
+
+    private readonly app: App<Element>
+
+    private loaded = false
+    private removeRoute: (() => void) | null = null
+
+    constructor(app: App<Element>, raw: ExtensionRecordRaw) {
+        this.app = app
+        this.name = raw.name
+        this.uuid = raw.uuid
+        this.version = raw.version
+
+        if (raw.route) this.route = raw.route
+        if (raw.navItems) this.navItems = raw.navItems
+        if (raw.component) this.component = raw.component
+    }
+
+    /**
+     * Load the extension.
+     */
+    public load() {
+        if (this.loaded) return
+        if (this.route) this.removeRoute = router.addRoute(this.route)
+        if (this.navItems)
+            useAppStore().navItems.push(
+                ...this.navItems.map((item) => ({
+                    uuid: this.uuid,
+                    ...item
+                }))
+            )
+        if (this.component)
+            for (const key in this.component)
+                this.app.component(`${this.component.root}${key}`, this.component.components[key])
+        this.loaded = true
+    }
+
+    /**
+     * Unload the extension.
+     */
+    public unload() {
+        if (!this.loaded) return
+        useAppStore().navItems = useAppStore().navItems.filter((item) => item.uuid !== this.uuid)
+        if (this.removeRoute) this.removeRoute()
+        this.loaded = false
+    }
+}
+
+export class ExtensionManager {
+    private readonly app: App<Element>
+    private readonly map: Map<string, Extension> = new Map()
+
+    constructor(app: App<Element>) {
+        this.app = app
+    }
+
+    /**
+     * Register an extension.
+     * @param raw The raw extension record
+     * @returns The extension instance
+     */
+    public register(raw: ExtensionRecordRaw) {
+        if (this.map.has(raw.uuid)) {
+            console.warn(
+                `Extension (${raw.name}) already registered or the uuid conflicts: ${raw.uuid}`
+            )
+            return
+        }
+        const extension = new Extension(this.app, raw)
+        this.map.set(extension.uuid, extension)
+    }
+
+    /**
+     * Unregister an extension.
+     * @param uuid The uuid of the extension
+     */
+    public unregister(uuid: string) {
+        const extension = this.map.get(uuid)
+        if (!extension) {
+            console.warn('Unknown extension: ' + uuid)
+            return
+        }
+        extension.unload()
+        this.map.delete(extension.uuid)
+    }
+
+    public loadAll() {
+        for (const extension of this.map.values()) extension.load()
+    }
+}
+
+export const extensionManager = {
+    install(app: App<Element>) {
+        const extensionManager = new ExtensionManager(app)
+        app.config.globalProperties.$extensionManager = extensionManager
+        app.provide('$extensionManager', extensionManager)
+
+        const tournamentRaw = import('./tournament')
+        tournamentRaw.then((raw) => {
+            extensionManager.register(raw.default)
+            extensionManager.loadAll()
+        })
+    }
+}

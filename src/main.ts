@@ -10,7 +10,9 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import App from './App.vue'
+
 import i18n from './i18n'
+import { router } from './router'
 import { customThemes } from './themes'
 import { extensionManager } from './extensions'
 import globalAppComponents from './components/app'
@@ -34,6 +36,7 @@ const vuetify = createVuetify({
 
 app.use(createPinia())
 app.use(i18n)
+app.use(router)
 app.use(vuetify)
 app.use(extensionManager)
 app.use(globalAppComponents)

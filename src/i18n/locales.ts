@@ -1,4 +1,23 @@
-export default [
+export interface LocaleOptions {
+    /**
+     * The title of the locale.
+     */
+    title: string
+    /**
+     * The locale code.
+     */
+    locale: string
+    /**
+     * Whether the locale is enabled.
+     */
+    enabled: boolean
+    /**
+     * The alternate locale code.
+     */
+    alternate?: string
+}
+
+const locales: LocaleOptions[] = [
     {
         title: 'English',
         locale: 'en',
@@ -17,3 +36,5 @@ export default [
         enabled: false
     }
 ]
+
+export default locales

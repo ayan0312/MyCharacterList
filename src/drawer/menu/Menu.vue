@@ -6,7 +6,7 @@
         :order="mobile ? -1 : undefined"
         width="300"
     >
-        <app-list :items="app.items" nav>
+        <app-list :items="app.navItems" nav>
             <template #divider>
                 <v-divider class="my-3 mb-4 ms-10" />
             </template>

@@ -49,21 +49,66 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Prop } from 'vue'
 
-export type ListItem = {
+/**
+ * The list item.
+ */
+export interface ListItem {
+    to?: string
+    /**
+     * The unique identifier of the list item.
+     */
+    uuid?: string
+    /**
+     * The link of the list item.
+     */
     href?: string
+    /**
+     * The children of the list item.
+     */
     items?: (string | ListItem)[]
+    /**
+     * The title of the list item.
+     */
     title?: string
+    /**
+     * The click event of the list item.
+     */
     onClick?: () => void
+    /**
+     * Whether the list item is a divider.
+     */
     divider?: boolean
+    /**
+     * The subtitle of the list item.
+     */
     subtitle?: string
+    /**
+     * Whether the list item is disabled.
+     */
     disabled?: boolean
+    /**
+     * The subfolder of the list item.
+     */
     subfolder?: string
+    /**
+     * The subheader of the list item.
+     */
     subheader?: string
-    routePath?: string
-    routeMatch?: string
+    /**
+     * The icon to display before the list item.
+     */
     appendIcon?: string
+    /**
+     * The icon to display when the list item is active.
+     */
     activeIcon?: string
+    /**
+     * Whether the list item is emphasized.
+     */
     emphasized?: boolean
+    /**
+     * The icon to display when the list item is not active.
+     */
     inactiveIcon?: string
 }
 
@@ -72,13 +117,17 @@ function generateListItem(item: string | ListItem): any {
     const isParent = !isString && item.items
     const isType = !isString && (item.divider || item.subheader)
 
-    if (isString || (!isParent && !isType)) {
-        const litem = isString ? { title: item } : item
-
+    if (isString) {
         return {
-            title: litem.title,
-            href: litem.href,
-            subtitle: litem.subtitle && te(litem.subtitle) ? t(litem.subtitle) : litem.subtitle,
+            title: item,
+            emphasized: false,
+            disabled: true
+        }
+    } else if (!isParent && !isType) {
+        return {
+            title: item.title,
+            href: item.href,
+            subtitle: item.subtitle && te(item.subtitle) ? t(item.subtitle) : item.subtitle,
             emphasized: false,
             disabled: true
         }
@@ -122,9 +171,7 @@ const computedItems = computed(
     () =>
         props.items?.map((item) => {
             if (item.divider || item.subheader) return generateListItem(item)
-
             const title = item.title && te(item.title) ? t(item.title) : item.title
-
             return {
                 ...generateListItem({
                     title,

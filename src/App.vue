@@ -3,16 +3,19 @@
         <app-bar />
         <app-menu-drawer />
         <app-settings-drawer />
-        
+
         <back-to-top />
         <snackbar-queue />
-        <v-main class="text-center font-weight-light"> content </v-main>
+        <v-main class="text-center font-weight-light">
+            <router-view />
+        </v-main>
     </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
+import { RouterView } from 'vue-router'
 
 import AppBar from 'src/components/bar/Bar.vue'
 import BackToTop from 'src/components/BackToTop.vue'

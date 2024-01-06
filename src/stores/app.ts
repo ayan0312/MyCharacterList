@@ -14,22 +14,22 @@ export type Notification = {
 }
 
 export type RootState = {
-    items: ListItem[]
     drawer: {
         menu: boolean
         settings: boolean
     }
+    navItems: ListItem[]
     notifications: Notification[]
 }
 
 export const useAppStore = defineStore('app', {
     state: () =>
         ({
-            items: Array.from(navItems),
             drawer: {
                 menu: true,
                 settings: false
             },
+            navItems: Array.from(navItems),
             notifications: []
         }) as RootState,
     actions: {

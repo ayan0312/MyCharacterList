@@ -12,28 +12,21 @@
         <template v-if="$slots.item" #item="itemProps">
             <slot name="item" v-bind="itemProps" />
         </template>
-
         <template #divider>
             <slot name="divider" />
-
             <v-divider v-if="!$slots.divider" class="my-3 mb-4 ms-2 me-n2" />
         </template>
-
         <template #title="{ item }">
             {{ item.title }}
-
             <v-badge v-if="item.emphasized" class="ms-n1" color="success" dot inline />
         </template>
-
         <template #subtitle="{ item }">
             <span v-if="item.subtitle" class="text-high-emphasis">
                 {{ item.subtitle }}
             </span>
         </template>
-
         <template #subheader="{ props: subheaderProps }">
             <slot name="subheader" v-bind="{ subheaderProps }" />
-
             <v-list-subheader
                 v-if="!$slots.subheader"
                 class="text-high-emphasis text-uppercase font-weight-black"
@@ -113,23 +106,20 @@ export interface ListItem {
 }
 
 function generateListItem(item: string | ListItem): any {
-    const isString = typeof item === 'string'
-    const isParent = !isString && item.items
-    const isType = !isString && (item.divider || item.subheader)
-
-    if (isString) {
+    if (typeof item === 'string') {
         return {
             title: item,
-            emphasized: false,
-            disabled: true
+            disabled: true,
+            emphasized: false
         }
-    } else if (!isParent && !isType) {
+    } else if (!item.items && !(item.divider || item.subheader)) {
         return {
-            title: item.title,
+            to: item.to,
             href: item.href,
+            title: item.title,
             subtitle: item.subtitle && te(item.subtitle) ? t(item.subtitle) : item.subtitle,
-            emphasized: false,
-            disabled: true
+            disabled: item.to ? false : true,
+            emphasized: false
         }
     } else if (item.divider) {
         return {
@@ -137,14 +127,14 @@ function generateListItem(item: string | ListItem): any {
         }
     } else if (item.subheader) {
         return {
-            title: t(item.subheader),
-            type: 'subheader'
+            type: 'subheader',
+            title: t(item.subheader)
         }
     } else if (item.items) {
         return {
             title: t(item.title!),
-            emphasized: item.emphasized,
-            children: item.items.map((item) => generateListItem(item))
+            children: item.items.map((item) => generateListItem(item)),
+            emphasized: item.emphasized
         }
     }
 
@@ -175,18 +165,19 @@ const computedItems = computed(
             return {
                 ...generateListItem({
                     title,
+                    to: item.to,
                     href: item?.href
                 }),
                 onClick: item?.onClick,
                 rel: item.href ? 'noopener noreferrer' : undefined,
+                value: title,
                 target: item.href ? '_blank' : undefined,
+                disabled: item.disabled,
                 children: generateListItems(item),
+                appendIcon: item.appendIcon,
                 prependIcon: opened.value.includes(title ?? '')
                     ? item.activeIcon
-                    : item.inactiveIcon,
-                value: title,
-                appendIcon: item.appendIcon,
-                disabled: item.disabled
+                    : item.inactiveIcon
             }
         })
 )

@@ -14,7 +14,7 @@ import App from './App.vue'
 import i18n from './i18n'
 import { router } from './router'
 import { customThemes } from './themes'
-import { extensionManager } from './extensions'
+import { extensionHandler } from './extensions'
 import globalAppComponents from './components/app'
 
 const app = createApp(App)
@@ -38,7 +38,7 @@ app.use(createPinia())
 app.use(i18n)
 app.use(router)
 app.use(vuetify)
-app.use(extensionManager)
+app.use(extensionHandler)
 app.use(globalAppComponents)
 
 app.mount('#app')

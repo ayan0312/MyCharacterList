@@ -1,9 +1,9 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
 
 import { router } from 'src/router'
 import type { ListItem } from 'src/components/app/List.vue'
 import { useAppStore } from 'src/stores/app'
-import type { App, Component } from 'vue'
+import { watchEffect, type App, type Component } from 'vue'
 
 /**
  * The raw extension record.
@@ -109,7 +109,7 @@ export class Extension implements ExtensionRecordRaw {
     }
 }
 
-export class ExtensionManager {
+export class ExtensionHandler {
     private readonly app: App<Element>
     private readonly map: Map<string, Extension> = new Map()
 
@@ -152,16 +152,40 @@ export class ExtensionManager {
     }
 }
 
-export const extensionManager = {
-    install(app: App<Element>) {
-        const extensionManager = new ExtensionManager(app)
-        app.config.globalProperties.$extensionManager = extensionManager
-        app.provide('$extensionManager', extensionManager)
+function hasNecessaryRoute(to: RouteLocationNormalized) {
+    return router.getRoutes().some((route) => route.path === to.path)
+}
 
+function guardRoutesWithoutExtensions() {
+    let back = ''
+    const stopGuard = router.beforeEach((to) => {
+        if (!hasNecessaryRoute(to) && !useAppStore().loadedExtensions) {
+            back = to.fullPath
+            return '/loading-extensions'
+        }
+    })
+    const stopWatch = watchEffect(() => {
+        if (useAppStore().loadedExtensions) {
+            stopWatch()
+            stopGuard()
+            if (back) router.replace(back)
+        }
+    })
+}
+
+export const extensionHandler = {
+    install(app: App<Element>) {
+        const extensionHandler = new ExtensionHandler(app)
+        app.config.globalProperties.$extensionHandler = extensionHandler
+        app.provide('$extensionHandler', extensionHandler)
+        guardRoutesWithoutExtensions()
+
+        // test
         const tournamentRaw = import('./tournament')
         tournamentRaw.then((raw) => {
-            extensionManager.register(raw.default)
-            extensionManager.loadAll()
+            extensionHandler.register(raw.default)
+            extensionHandler.loadAll()
+            useAppStore().loadedExtensions = true
         })
     }
 }

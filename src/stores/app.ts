@@ -20,6 +20,7 @@ export type RootState = {
     }
     navItems: ListItem[]
     notifications: Notification[]
+    loadedExtensions: boolean
 }
 
 export const useAppStore = defineStore('app', {
@@ -30,7 +31,8 @@ export const useAppStore = defineStore('app', {
                 settings: false
             },
             navItems: Array.from(navItems),
-            notifications: []
+            notifications: [],
+            loadedExtensions: false
         }) as RootState,
     actions: {
         snackbar(message: string, options: Partial<Exclude<Notification, 'message'>> = {}) {

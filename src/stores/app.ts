@@ -37,6 +37,12 @@ export const useAppStore = defineStore('app', {
     actions: {
         snackbar(message: string, options: Partial<Exclude<Notification, 'message'>> = {}) {
             this.notifications.push({ message, ...options })
+        },
+        addNavItems(items: ListItem[]) {
+            this.navItems.push(...items)
+        },
+        filterNavItems(predicate: (item: ListItem) => boolean) {
+            this.navItems = this.navItems.filter(predicate)
         }
     }
 })

@@ -1,5 +1,5 @@
 <template>
-    <div ref="container"></div>
+    <canvas ref="canvas"></canvas>
 </template>
 
 <script setup lang="ts">
@@ -11,23 +11,19 @@ import { watchEffect } from 'vue'
 
 let app: PIXI.Application<PIXI.ICanvas> | null = null
 const theme = useTheme()
-const canvas = document.createElement('canvas')
-const container = ref<HTMLElement | null>(null)
+const canvas = ref<HTMLCanvasElement | null>(null)
 
 watchEffect(() => {
     const colors = theme.current.value.colors
-    if (app) {
-        console.log(colors)
-        app.renderer.background.color = colors.background
-    }
+    if (app) app.renderer.background.color = colors.background
 })
 
 onMounted(() => {
-    if (container.value) {
+    if (canvas.value) {
+        const parent = canvas.value.parentElement || canvas.value
         app = new PIXI.Application({
-            view: canvas,
-            width: container.value?.offsetWidth || 500,
-            height: 500,
+            view: canvas.value,
+            resizeTo: parent,
             background: theme.current.value.colors.background
         })
 
@@ -44,10 +40,8 @@ onMounted(() => {
 
         if (binaryTree.root !== null)
             drawBinaryTree(app, binaryTree.root, app.renderer.width / 2.5, 50)
-        
-        container.value.appendChild(canvas)
     }
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="sass"></style>

@@ -12,10 +12,6 @@ import type { ListItem } from 'src/components/app/List.vue'
  */
 export interface ExtensionRecordRaw {
     /**
-     * The i18n options.
-     */
-    i18n?: ExtensionRecordI18nOptions
-    /**
      * The name of the extension.
      */
     name: string
@@ -23,6 +19,10 @@ export interface ExtensionRecordRaw {
      * The uuid of the extension.
      */
     uuid: string
+    /**
+     * The i18n options.
+     */
+    i18n?: ExtensionRecordI18nOptions
     /**
      * The routes of the app.
      */
@@ -86,6 +86,7 @@ export class Extension implements ExtensionRecordRaw {
     public readonly component?: ExtensionRecordComponentOptions
 
     private readonly app: App<Element>
+    private readonly store: ReturnType<typeof useAppStore>
 
     private loaded = false
     private removeRoute: (() => void) | null = null
@@ -94,6 +95,7 @@ export class Extension implements ExtensionRecordRaw {
         this.app = app
         this.name = raw.name
         this.uuid = raw.uuid
+        this.store = useAppStore()
         this.version = raw.version
 
         if (raw.i18n) this.i18n = raw.i18n
@@ -126,8 +128,8 @@ export class Extension implements ExtensionRecordRaw {
         }
         if (this.route) this.removeRoute = router.addRoute(this.route)
         if (this.navItems)
-            useAppStore().navItems.push(
-                ...this.navItems.map((item) => ({
+            this.store.addNavItems(
+                this.navItems.map((item) => ({
                     uuid: this.uuid,
                     ...item
                 }))
@@ -143,7 +145,7 @@ export class Extension implements ExtensionRecordRaw {
      */
     public unload() {
         if (!this.loaded) return
-        useAppStore().navItems = useAppStore().navItems.filter((item) => item.uuid !== this.uuid)
+        this.store.filterNavItems((item) => item.uuid !== this.uuid)
         if (this.removeRoute) this.removeRoute()
         this.loaded = false
     }
@@ -231,8 +233,7 @@ export const extensionHandler = {
         guardRoutesWithoutExtensions()
 
         // test
-        const tournamentRaw = import('./tournament')
-        tournamentRaw.then((raw) => {
+        import('./tournament').then((raw) => {
             extensionHandler.register(raw.default)
             extensionHandler.loadAll()
             useAppStore().loadedExtensions = true

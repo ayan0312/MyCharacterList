@@ -38,7 +38,9 @@ app.use(createPinia())
 app.use(i18n)
 app.use(router)
 app.use(vuetify)
-app.use(extensionHandler)
 app.use(globalAppComponents)
+
+// Use it after all plugins have been registered.
+app.use(extensionHandler)
 
 app.mount('#app')

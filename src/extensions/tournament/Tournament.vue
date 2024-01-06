@@ -1,22 +1,34 @@
 <template>
-    <canvas ref="canvas"></canvas>
+    <div ref="container"></div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import * as PIXI from 'pixi.js'
 import { BinaryTree, drawBinaryTree } from './editor'
+import { useTheme } from 'vuetify'
+import { watchEffect } from 'vue'
 
-const canvas = ref<HTMLCanvasElement | null>(null)
+let app: PIXI.Application<PIXI.ICanvas> | null = null
+const theme = useTheme()
+const canvas = document.createElement('canvas')
+const container = ref<HTMLElement | null>(null)
+
+watchEffect(() => {
+    const colors = theme.current.value.colors
+    if (app) {
+        console.log(colors)
+        app.renderer.background.color = colors.background
+    }
+})
 
 onMounted(() => {
-    if (canvas.value) {
-        const parent = canvas.value.parentElement || canvas.value
-        const app = new PIXI.Application({
-            view: canvas.value,
-            width: parent.offsetWidth || 500,
+    if (container.value) {
+        app = new PIXI.Application({
+            view: canvas,
+            width: container.value?.offsetWidth || 500,
             height: 500,
-            backgroundColor: 0xaaaaaa
+            background: theme.current.value.colors.background
         })
 
         const binaryTree = new BinaryTree()
@@ -32,6 +44,8 @@ onMounted(() => {
 
         if (binaryTree.root !== null)
             drawBinaryTree(app, binaryTree.root, app.renderer.width / 2.5, 50)
+        
+        container.value.appendChild(canvas)
     }
 })
 </script>

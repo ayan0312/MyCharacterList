@@ -1,8 +1,4 @@
 {
-    "home": {
-        "get-started": "Get Started",
-        "why-vuetify": "Why Vuetify?"
-    },
     "accessibility": "Accessibility (a11y)",
     "ads": "Ads",
     "ads-via-vuetify": "ads via Vuetify",
@@ -302,6 +298,7 @@
     "x": "X",
 
     "esc": "Esc",
+    "home": "Home",
     "open": "Open",
     "theme": "Theme",
     "custom-theme": "Custom theme",

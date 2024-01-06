@@ -13,21 +13,28 @@ const raw: ExtensionRecordRaw = {
     version: 1,
     navItems: [
         {
-            title: 'tournament',
+            title: 'tournament.tournament',
             items: [
                 {
-                    title: 'tournament',
+                    title: 'tournament.bracket',
                     to: '/tournament'
                 }
-            ]
+            ],
+            activeIcon: 'mdi-trophy-variant-outline',
+            inactiveIcon: 'mdi-trophy-variant-outline'
         }
     ],
-    messages: {
-        en: {
-            tournament: 'Tournament'
-        },
-        'zh-CN': {
-            tournament: '比赛'
+    i18n: {
+        root: 'tournament',
+        messages: {
+            en: {
+                bracket: 'Bracket',
+                tournament: 'Tournament'
+            },
+            'zh-CN': {
+                bracket: '淘汰赛',
+                tournament: '锦标赛'
+            }
         }
     }
 }

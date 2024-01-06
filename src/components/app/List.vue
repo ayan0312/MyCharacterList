@@ -108,7 +108,7 @@ export interface ListItem {
 function generateListItem(item: string | ListItem): any {
     if (typeof item === 'string') {
         return {
-            title: item,
+            title: item && te(item) ? t(item) : item,
             disabled: true,
             emphasized: false
         }
@@ -116,7 +116,7 @@ function generateListItem(item: string | ListItem): any {
         return {
             to: item.to,
             href: item.href,
-            title: item.title,
+            title: item.title && te(item.title) ? t(item.title) : item.title,
             subtitle: item.subtitle && te(item.subtitle) ? t(item.subtitle) : item.subtitle,
             disabled: item.to ? false : true,
             emphasized: false

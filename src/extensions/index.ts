@@ -1,14 +1,20 @@
+import { watchEffect, type App, type Component } from 'vue'
 import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
 
+import { i18n } from 'src/i18n'
 import { router } from 'src/router'
-import type { ListItem } from 'src/components/app/List.vue'
 import { useAppStore } from 'src/stores/app'
-import { watchEffect, type App, type Component } from 'vue'
+
+import type { ListItem } from 'src/components/app/List.vue'
 
 /**
  * The raw extension record.
  */
 export interface ExtensionRecordRaw {
+    /**
+     * The i18n options.
+     */
+    i18n?: ExtensionRecordI18nOptions
     /**
      * The name of the extension.
      */
@@ -30,13 +36,27 @@ export interface ExtensionRecordRaw {
      */
     navItems?: ListItem[]
     /**
-     * i18n messages.
-     */
-    messages?: Record<string, Record<string, string>>
-    /**
      * The global components.
      */
     component?: ExtensionRecordComponentOptions
+}
+
+/**
+ * The i18n options.
+ */
+interface ExtensionRecordI18nOptions {
+    /**
+     * The root name of the components.
+     * @example If the root name is `app` and the message name is `home`
+     * ```ts
+     * t('app.home')
+     * ```
+     */
+    root: string
+    /**
+     * i18n messages.
+     */
+    messages: Record<string, Record<string, string>>
 }
 
 /**
@@ -58,8 +78,10 @@ interface ExtensionRecordComponentOptions {
 export class Extension implements ExtensionRecordRaw {
     public readonly name: string
     public readonly uuid: string
-    public readonly route?: RouteRecordRaw
     public readonly version: number
+
+    public readonly i18n?: ExtensionRecordI18nOptions
+    public readonly route?: RouteRecordRaw
     public readonly navItems?: ListItem[]
     public readonly component?: ExtensionRecordComponentOptions
 
@@ -74,9 +96,18 @@ export class Extension implements ExtensionRecordRaw {
         this.uuid = raw.uuid
         this.version = raw.version
 
+        if (raw.i18n) this.i18n = raw.i18n
         if (raw.route) this.route = raw.route
         if (raw.navItems) this.navItems = raw.navItems
         if (raw.component) this.component = raw.component
+    }
+
+    /**
+     * Toggle the extension.
+     */
+    public toggle() {
+        if (this.loaded) this.unload()
+        else this.load()
     }
 
     /**
@@ -84,6 +115,15 @@ export class Extension implements ExtensionRecordRaw {
      */
     public load() {
         if (this.loaded) return
+        if (this.i18n) {
+            const { root, messages } = this.i18n
+            for (const locale in messages) {
+                const message = messages[locale]
+                i18n.global.mergeLocaleMessage(locale, {
+                    [root]: message
+                })
+            }
+        }
         if (this.route) this.removeRoute = router.addRoute(this.route)
         if (this.navItems)
             useAppStore().navItems.push(
@@ -147,8 +187,18 @@ export class ExtensionHandler {
         this.map.delete(extension.uuid)
     }
 
+    /**
+     * Load all extensions.
+     */
     public loadAll() {
         for (const extension of this.map.values()) extension.load()
+    }
+
+    /**
+     * Unload all extensions.
+     */
+    public unloadAll() {
+        for (const extension of this.map.values()) extension.unload()
     }
 }
 

@@ -13,19 +13,20 @@ const messages = Object.fromEntries(
     )
 )
 
+export const i18n = createI18n({
+    legacy: false,
+    messages
+})
+
 export default {
     install(app: App<Element>) {
         const localeStore = useUserStore()
-        const i18n = createI18n({
-            legacy: false,
-            locale: localeStore.settings.locale,
-            messages
-        })
         watch(
             () => localeStore.settings.locale,
             (locale) => {
                 i18n.global.locale.value = locale
-            }
+            },
+            { immediate: true }
         )
         app.use(i18n)
     }

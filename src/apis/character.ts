@@ -1,4 +1,4 @@
-import { get, https } from 'src/shared/https'
+import { https } from 'src/shared/https'
 import type {
     ICharacter,
     ICharacterPatchedResult,
@@ -8,13 +8,13 @@ import type {
 const route = 'characters'
 
 export function findCharById(id: number, options: ICharacter = {}) {
-    return https().get(`${route}/${id}`, { params: options })
+    return https.get(`${route}/${id}`, { params: options })
 }
 
 // export function findCharByIds(ids: number[], patch: false): Promise<ICharacterResult[]>
 // export function findCharByIds(ids: number[], patch: true): Promise<ICharacterPatchedResult[]>
 export function findCharByIds(ids: number[], patch: boolean = false) {
-    return https().get(route, {
+    return https.get(route, {
         params: {
             ids: ids.join(),
             patch: String(patch)
@@ -23,7 +23,7 @@ export function findCharByIds(ids: number[], patch: boolean = false) {
 }
 
 export function searchChars(options: ICharacterSearch) {
-    return get<ICharacterPatchedResult[]>(route, {
+    return https.get<ICharacterPatchedResult[]>(route, {
         params: {
             options: JSON.stringify(options)
         }
@@ -31,17 +31,17 @@ export function searchChars(options: ICharacterSearch) {
 }
 
 export function createChars(body: any) {
-    return https().post(route, body)
+    return https.post(route, body)
 }
 
 export function updateChars(id: number, body: any) {
-    return https().patch(`${route}/${id}`, body)
+    return https.patch(`${route}/${id}`, body)
 }
 
 export function updateCharsByIds(ids: number[], char: any, diffs?: string[]) {
-    return https().patch(route, { ids, char, diffs })
+    return https.patch(route, { ids, char, diffs })
 }
 
 export function deleteChar(id: number) {
-    return https().delete(`${route}/${id}`)
+    return https.delete(`${route}/${id}`)
 }

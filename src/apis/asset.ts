@@ -19,7 +19,7 @@ export function searchAssets(opts: {
         characterIds?: string
     }
 }) {
-    return https().get(route, {
+    return https.get(route, {
         params: {
             options: JSON.stringify(opts)
         }
@@ -41,7 +41,7 @@ export function getOriginImage(filename: string) {
 }
 
 export function findNearAssetsById(id: number, left = 1, right = 1) {
-    return https().get(route, {
+    return https.get(route, {
         params: {
             near: JSON.stringify({
                 id,
@@ -58,13 +58,13 @@ export function findAssetsById(
         relations?: string
     } = {}
 ) {
-    return https().get(`${route}/${id}`, {
+    return https.get(`${route}/${id}`, {
         params: opts
     })
 }
 
 export function findAssetsByIds(ids: number[], patch = false) {
-    return https().get(route, {
+    return https.get(route, {
         params: {
             ids: ids.join(),
             patch: String(patch)
@@ -73,15 +73,15 @@ export function findAssetsByIds(ids: number[], patch = false) {
 }
 
 export function createAsset(body: any) {
-    return https().post(route, body)
+    return https.post(route, body)
 }
 
 export function deleteAsset(id: number) {
-    return https().delete(`${route}/${id}`)
+    return https.delete(`${route}/${id}`)
 }
 
 export function deleteUnstarAssets(recycle = false) {
-    return https().delete(`${route}/unstar`, {
+    return https.delete(`${route}/unstar`, {
         params: {
             recycle: String(recycle)
         }
@@ -89,7 +89,7 @@ export function deleteUnstarAssets(recycle = false) {
 }
 
 export function deleteAssetsByIds(ids: number[]) {
-    return https().delete(route, {
+    return https.delete(route, {
         params: {
             ids: ids.join()
         }
@@ -97,11 +97,11 @@ export function deleteAssetsByIds(ids: number[]) {
 }
 
 export function updateAsset(id: number, body: any) {
-    return https().patch(`${route}/${id}`, body)
+    return https.patch(`${route}/${id}`, body)
 }
 
 export function updateAssetsByIds(ids: number[], asset: any, diffs?: string[]) {
-    return https().patch(route, {
+    return https.patch(route, {
         ids,
         asset,
         diffs

@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
 import { useAppStore } from 'src/stores/app'
 import { useUserStore } from 'src/stores/user'
@@ -60,14 +60,16 @@ export function useAxiosErrorHandler(
     }
 }
 
+export type AxiosResponsePromise<T> = Promise<AxiosResponse<IResponse<T>>>
+
 export const https = {
     get<Result>(url: string, config?: AxiosRequestConfig) {
         return createHttps().get<IResponse<Result>>(url, config)
     },
-    post<Result, Data>(url: string, data?: Data, config?: AxiosRequestConfig) {
+    post<Result, Data = any>(url: string, data?: Data, config?: AxiosRequestConfig) {
         return createHttps().post<IResponse<Result>>(url, data, config)
     },
-    patch<Result, Data>(url: string, data?: Data, config?: AxiosRequestConfig) {
+    patch<Result, Data = any>(url: string, data?: Data, config?: AxiosRequestConfig) {
         return createHttps().patch<IResponse<Result>>(url, data, config)
     },
     delete<Result>(url: string, config?: AxiosRequestConfig) {

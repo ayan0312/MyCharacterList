@@ -1,20 +1,30 @@
-import { https } from 'src/shared/https'
+import { https, type AxiosResponsePromise } from 'src/shared/https'
 import type {
     ICharacter,
     ICharacterPatchedResult,
+    ICharacterResult,
     ICharacterSearch
 } from './interface/character.interface'
 
 const route = 'characters'
 
-export function findCharById(id: number, options: ICharacter = {}) {
-    return https.get(`${route}/${id}`, { params: options })
+export function findCharById(id: number, patch: true): AxiosResponsePromise<ICharacterPatchedResult>
+export function findCharById(id: number, patch: false): AxiosResponsePromise<ICharacterResult>
+export function findCharById(id: number, patch = false) {
+    return https.get<ICharacterResult | ICharacterPatchedResult>(`${route}/${id}`, {
+        params: {
+            patch: String(patch)
+        }
+    })
 }
 
-// export function findCharByIds(ids: number[], patch: false): Promise<ICharacterResult[]>
-// export function findCharByIds(ids: number[], patch: true): Promise<ICharacterPatchedResult[]>
-export function findCharByIds(ids: number[], patch: boolean = false) {
-    return https.get(route, {
+export function findCharByIds(
+    ids: number[],
+    patch: true
+): AxiosResponsePromise<ICharacterPatchedResult[]>
+export function findCharByIds(ids: number[], patch: false): AxiosResponsePromise<ICharacterResult[]>
+export function findCharByIds(ids: number[], patch = false) {
+    return https.get<ICharacterResult[] | ICharacterPatchedResult[]>(route, {
         params: {
             ids: ids.join(),
             patch: String(patch)
@@ -30,18 +40,20 @@ export function searchChars(options: ICharacterSearch) {
     })
 }
 
-export function createChars(body: any) {
-    return https.post(route, body)
+export function createChars(body: ICharacter) {
+    return https.post<ICharacterResult>(route, body)
 }
 
-export function updateChars(id: number, body: any) {
-    return https.patch(`${route}/${id}`, body)
+export function updateChars(id: number, body: ICharacter) {
+    return https.patch<ICharacterResult>(`${route}/${id}`, body)
 }
 
-export function updateCharsByIds(ids: number[], char: any, diffs?: string[]) {
+// TODO
+export function updateCharsByIds(ids: number[], char: ICharacter, diffs?: string[]) {
     return https.patch(route, { ids, char, diffs })
 }
 
+//
 export function deleteChar(id: number) {
-    return https.delete(`${route}/${id}`)
+    return https.delete<ICharacterResult>(`${route}/${id}`)
 }

@@ -15,10 +15,12 @@ const { t } = useI18n()
 
 const items = computed(() => [
     {
+        to: '/faq',
         title: 'faq',
         appendIcon: 'mdi-head-question-outline'
     },
     {
+        to: '/file-a-bug-report',
         title: 'file-a-bug-report',
         appendIcon: 'mdi-bug-outline'
     },
@@ -30,11 +32,18 @@ const items = computed(() => [
     },
     { divider: true },
     {
+        to: '/release-notes',
+        title: 'release-notes',
+        appendIcon: 'mdi-note-text-outline'
+    },
+    {
+        to: '/check-for-updates',
         title: 'check-for-updates',
         appendIcon: 'mdi-update'
     },
     { divider: true },
     {
+        to: '/about',
         title: 'about',
         appendIcon: 'mdi-information-outline'
     }

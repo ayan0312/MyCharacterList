@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import navItems from './data_navItems'
 import type { ListItem } from 'src/components/app/List.vue'
 
 export type Notification = {
@@ -30,7 +29,7 @@ export const useAppStore = defineStore('app', {
                 menu: true,
                 settings: false
             },
-            navItems: Array.from(navItems),
+            navItems: [],
             notifications: [],
             loadedExtensions: false
         }) as RootState,

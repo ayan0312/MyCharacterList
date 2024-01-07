@@ -225,9 +225,7 @@
     "ready-text": "Continue your learning with related content selected by the {team} or move between pages by using the navigation links below.",
     "ready": "Ready for more?",
     "reddit": "Reddit",
-    "release-notes": "Release notes",
     "released-by": "Released by: {author}",
-    "release": "Release",
     "releases": "Releases",
     "released-under-the": "Released under the {0}",
     "report-a-bug": "Report a Bug",
@@ -341,6 +339,7 @@
     "help": "Help",
     "about": "About",
     "github-issues": "GitHub issues",
+    "release-notes": "Release notes",
     "file-a-bug-report": "File a bug report",
     "check-for-updates": "Check for updates..."
 }

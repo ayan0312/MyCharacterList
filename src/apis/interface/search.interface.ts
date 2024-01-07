@@ -5,5 +5,5 @@ export interface ISearch<T extends Record<string, any>> {
         sort: string
         order: 'ASC' | 'DESC'
     }
-    condition: T
+    condition?: T
 }

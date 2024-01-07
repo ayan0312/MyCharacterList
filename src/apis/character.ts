@@ -1,5 +1,9 @@
-import { https } from 'src/shared/https'
-import type { ICharacter, ICharacterSearch } from './interface/character.interface'
+import { get, https } from 'src/shared/https'
+import type {
+    ICharacter,
+    ICharacterPatchedResult,
+    ICharacterSearch
+} from './interface/character.interface'
 
 const route = 'characters'
 
@@ -7,6 +11,8 @@ export function findCharById(id: number, options: ICharacter = {}) {
     return https().get(`${route}/${id}`, { params: options })
 }
 
+// export function findCharByIds(ids: number[], patch: false): Promise<ICharacterResult[]>
+// export function findCharByIds(ids: number[], patch: true): Promise<ICharacterPatchedResult[]>
 export function findCharByIds(ids: number[], patch: boolean = false) {
     return https().get(route, {
         params: {
@@ -16,8 +22,8 @@ export function findCharByIds(ids: number[], patch: boolean = false) {
     })
 }
 
-export function searchChars(options: { options: ICharacterSearch }) {
-    return https().get(route, {
+export function searchChars(options: ICharacterSearch) {
+    return get<ICharacterPatchedResult[]>(route, {
         params: {
             options: JSON.stringify(options)
         }

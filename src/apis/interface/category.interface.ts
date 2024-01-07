@@ -1,4 +1,4 @@
-import type { IName } from './name.interface'
+import type { IName, INameResult } from './name.interface'
 
 export const enum CategoryType {
     common = 0,
@@ -12,4 +12,8 @@ export interface ICategory extends IName {
     intro?: string
 }
 
-export interface ICategoryResult extends Required<ICategory> {}
+export interface ICategoryResult extends INameResult {
+    type: CategoryType
+    order: number
+    intro: string
+}

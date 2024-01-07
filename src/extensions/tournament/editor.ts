@@ -87,3 +87,12 @@ export function drawBinaryTree(
         }
     }
 }
+
+export class Editor {
+    public readonly app: PIXI.Application<PIXI.ICanvas>
+    constructor(app: PIXI.Application<PIXI.ICanvas>) {
+        this.app = app
+    }
+
+    public draw() {}
+}

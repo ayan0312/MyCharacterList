@@ -17,12 +17,3 @@ export interface UserSettings {
     locale: string
     quickbar: boolean
 }
-
-export interface User {
-    name: string
-    token: string
-    avatar: string
-    settings: UserSettings
-    introduction: string
-    notifications: UserNotification[]
-}

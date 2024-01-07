@@ -5,8 +5,17 @@ import type { components as octokitComponents } from '@octokit/openapi-types'
 export type Commit = octokitComponents['schemas']['commit']
 
 export type State = {
+    /**
+     * The latest commit.
+     */
     latest: Commit | null
+    /**
+     * The commits.
+     */
     commits: Commit[]
+    /**
+     * Whether the commits are being loaded.
+     */
     isLoading: boolean
 }
 
@@ -17,10 +26,9 @@ const octokit = new Octokit()
 export const useCommitsStore = defineStore('commits', {
     state: (): State => ({
         latest: null,
-        commits: [] as Commit[],
+        commits: [],
         isLoading: false
     }),
-
     actions: {
         async fetch() {
             this.isLoading = true

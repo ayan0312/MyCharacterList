@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useTheme } from 'vuetify'
 
-export const customThemes = Object.fromEntries(
+export const themes = Object.fromEntries(
     Object.entries(import.meta.glob('../themes/colors/*.json', { eager: true })).map(
         ([key, value]) => {
             return [key.slice(key.lastIndexOf('/') + 1, -5), (value as any).default]
@@ -16,7 +16,7 @@ export interface ThemeImages {
 }
 
 function matchThemeImages(themeName: string, key: keyof ThemeImages) {
-    const theme = customThemes[themeName]
+    const theme = themes[themeName]
     if (!theme) return undefined
     const images: ThemeImages | undefined = theme['background-images']
     if (!images) return undefined

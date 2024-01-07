@@ -1,5 +1,5 @@
 import { watchEffect, type App, type Component } from 'vue'
-import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 import { i18n } from 'src/i18n'
 import { router } from 'src/router'
@@ -85,17 +85,16 @@ export class Extension implements ExtensionRecordRaw {
     public readonly navItems?: ListItem[]
     public readonly component?: ExtensionRecordComponentOptions
 
-    private readonly app: App<Element>
-    private readonly store: ReturnType<typeof useAppStore>
+    private readonly handler: ExtensionHandler
 
     private loaded = false
     private removeRoute: (() => void) | null = null
 
-    constructor(app: App<Element>, raw: ExtensionRecordRaw) {
-        this.app = app
+    constructor(handler: ExtensionHandler, raw: ExtensionRecordRaw) {
+        this.handler = handler
+
         this.name = raw.name
         this.uuid = raw.uuid
-        this.store = useAppStore()
         this.version = raw.version
 
         if (raw.i18n) this.i18n = raw.i18n
@@ -128,7 +127,7 @@ export class Extension implements ExtensionRecordRaw {
         }
         if (this.route) this.removeRoute = router.addRoute(this.route)
         if (this.navItems)
-            this.store.addNavItems(
+            this.handler.store.addNavItems(
                 this.navItems.map((item) => ({
                     uuid: this.uuid,
                     ...item
@@ -136,7 +135,10 @@ export class Extension implements ExtensionRecordRaw {
             )
         if (this.component)
             for (const key in this.component)
-                this.app.component(`${this.component.root}${key}`, this.component.components[key])
+                this.handler.app.component(
+                    `${this.component.root}${key}`,
+                    this.component.components[key]
+                )
         this.loaded = true
     }
 
@@ -145,18 +147,21 @@ export class Extension implements ExtensionRecordRaw {
      */
     public unload() {
         if (!this.loaded) return
-        this.store.filterNavItems((item) => item.uuid !== this.uuid)
+        this.handler.store.filterNavItems((item) => item.uuid !== this.uuid)
         if (this.removeRoute) this.removeRoute()
         this.loaded = false
     }
 }
 
 export class ExtensionHandler {
-    private readonly app: App<Element>
+    public readonly app: App<Element>
+    public readonly store: ReturnType<typeof useAppStore>
+
     private readonly map: Map<string, Extension> = new Map()
 
-    constructor(app: App<Element>) {
+    constructor(app: App<Element>, store: ReturnType<typeof useAppStore>) {
         this.app = app
+        this.store = store
     }
 
     /**
@@ -171,7 +176,7 @@ export class ExtensionHandler {
             )
             return
         }
-        const extension = new Extension(this.app, raw)
+        const extension = new Extension(this, raw)
         this.map.set(extension.uuid, extension)
     }
 
@@ -202,41 +207,46 @@ export class ExtensionHandler {
     public unloadAll() {
         for (const extension of this.map.values()) extension.unload()
     }
-}
 
-function hasNecessaryRoute(to: RouteLocationNormalized) {
-    return router.getRoutes().some((route) => route.path === to.path)
-}
-
-function guardRoutesWithoutExtensions() {
-    let back = ''
-    const stopGuard = router.beforeEach((to) => {
-        if (!hasNecessaryRoute(to) && !useAppStore().loadedExtensions) {
-            back = to.fullPath
-            return '/loading-extensions'
-        }
-    })
-    const stopWatch = watchEffect(() => {
-        if (useAppStore().loadedExtensions) {
-            stopWatch()
-            stopGuard()
-            if (back) router.replace(back)
-        }
-    })
-}
-
-export const extensionHandler = {
-    install(app: App<Element>) {
-        const extensionHandler = new ExtensionHandler(app)
-        app.config.globalProperties.$extensionHandler = extensionHandler
-        app.provide('$extensionHandler', extensionHandler)
-        guardRoutesWithoutExtensions()
-
-        // test
-        import('./tournament').then((raw) => {
-            extensionHandler.register(raw.default)
-            extensionHandler.loadAll()
-            useAppStore().loadedExtensions = true
+    public guardRoutesWithoutExtensions() {
+        let back = ''
+        const stopGuard = router.beforeEach((to) => {
+            const necessaryRoute = router.getRoutes().some((route) => route.path === to.path)
+            if (!necessaryRoute && !this.store.loadedExtensions) {
+                back = to.fullPath
+                return '/loading-extensions'
+            }
+        })
+        const stopWatch = watchEffect(() => {
+            if (this.store.loadedExtensions) {
+                stopWatch()
+                stopGuard()
+                if (back) router.replace(back)
+            }
         })
     }
+}
+export function installExtensions({
+    app,
+    beforeUse,
+    afterUse
+}: {
+    app: App<Element>
+    beforeUse: () => void
+    afterUse: () => void
+}) {
+    beforeUse()
+    const store = useAppStore()
+    const extensionHandler = new ExtensionHandler(app, store)
+    app.config.globalProperties.$extensionHandler = extensionHandler
+    app.provide('$extensionHandler', extensionHandler)
+    extensionHandler.guardRoutesWithoutExtensions()
+    afterUse()
+
+    // Load and register the 'tournament' extension
+    import('./tournament').then((raw) => {
+        extensionHandler.register(raw.default)
+        extensionHandler.loadAll()
+        useAppStore().loadedExtensions = true
+    })
 }

@@ -19,7 +19,7 @@ defineProps({
     label: String,
     title: String,
     appendIcon: String,
-    prependIcon: String,
+    prependIcon: String
 })
 </script>
 

@@ -33,9 +33,9 @@ import AppBarLanguageMenu from './LanguageMenu.vue'
 import AppBarSettingsToggle from './SettingsToggle.vue'
 import AppBarNotificationsMenu from './NotificationsMenu.vue'
 
-import { useThemeImage } from 'src/themes'
 import { useAppStore } from 'src/stores/app'
 import { useUserStore } from 'src/stores/user'
+import { useThemeImage } from 'src/vuetify/themes'
 
 const app = useAppStore()
 const user = useUserStore()

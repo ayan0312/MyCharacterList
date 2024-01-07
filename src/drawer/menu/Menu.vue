@@ -22,7 +22,7 @@ import { useDisplay } from 'vuetify'
 
 import MenuAppend from './MenuAppend.vue'
 
-import { useThemeImage } from 'src/themes'
+import { useThemeImage } from 'src/vuetify/themes'
 import { useAppStore } from 'src/stores/app'
 
 const app = useAppStore()

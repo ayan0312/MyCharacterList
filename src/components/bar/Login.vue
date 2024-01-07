@@ -22,8 +22,7 @@
                     </v-card-title>
                     <v-card-subtitle class="text-wrap">{{ t('login.subtitle') }}</v-card-subtitle>
                 </div>
-                <v-list class="mx-auto" max-width="300" width="100%">
-                </v-list>
+                <v-list class="mx-auto" max-width="300" width="100%"> </v-list>
             </v-card>
         </v-dialog>
     </app-btn>

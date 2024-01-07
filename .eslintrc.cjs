@@ -11,7 +11,7 @@ module.exports = {
     ],
     rules: {
         'vue/multi-word-component-names': 'off',
-        "vue/no-v-text-v-html-on-component": 'off'
+        'vue/no-v-text-v-html-on-component': 'off'
     },
     parserOptions: {
         ecmaVersion: 'latest'

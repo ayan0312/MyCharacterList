@@ -8,14 +8,14 @@ import * as PIXI from 'pixi.js'
 import { BinaryTree, drawBinaryTree } from './editor'
 import { useTheme } from 'vuetify'
 import { watchEffect } from 'vue'
-import { searchChars } from 'src/apis/character'
+import { CharacterService } from 'src/apis/character'
 import { useAxiosErrorHandler } from 'src/shared/https'
 
 let app: PIXI.Application<PIXI.ICanvas> | null = null
 const theme = useTheme()
 const canvas = ref<HTMLCanvasElement | null>(null)
 
-searchChars({
+CharacterService.search({
     page: 1,
     size: 10,
     orderBy: {

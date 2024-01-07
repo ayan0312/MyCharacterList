@@ -151,6 +151,14 @@ export class Extension implements ExtensionRecordRaw {
         if (this.removeRoute) this.removeRoute()
         this.loaded = false
     }
+
+    /**
+     * Force unload the extension.
+     */
+    public forceUnload() {
+        this.loaded = true
+        this.unload()
+    }
 }
 
 export class ExtensionHandler {
@@ -198,7 +206,15 @@ export class ExtensionHandler {
      * Load all extensions.
      */
     public loadAll() {
-        for (const extension of this.map.values()) extension.load()
+        for (const extension of this.map.values()) {
+            try {
+                extension.load()
+            } catch (err) {
+                extension.forceUnload()
+                if (err instanceof Error) this.store.snackbar(err.message, { color: 'error' })
+                else this.store.snackbar('unknown error', { color: 'error' })
+            }
+        }
     }
 
     /**
@@ -208,24 +224,29 @@ export class ExtensionHandler {
         for (const extension of this.map.values()) extension.unload()
     }
 
+    /**
+     * Guard the routes without extensions.
+     */
     public guardRoutesWithoutExtensions() {
         let back = ''
         const stopGuard = router.beforeEach((to) => {
             const necessaryRoute = router.getRoutes().some((route) => route.path === to.path)
-            if (!necessaryRoute && !this.store.loadedExtensions) {
+            if (!necessaryRoute && !this.store.extensionsLoaded) {
                 back = to.fullPath
                 return '/loading-extensions'
             }
         })
         const stopWatch = watchEffect(() => {
-            if (this.store.loadedExtensions) {
+            if (this.store.extensionsLoaded) {
                 stopWatch()
                 stopGuard()
                 if (back) router.replace(back)
+                else router.push('/')
             }
         })
     }
 }
+
 export function installExtensions({
     app,
     beforeUse,
@@ -247,6 +268,6 @@ export function installExtensions({
     import('./tournament').then((raw) => {
         extensionHandler.register(raw.default)
         extensionHandler.loadAll()
-        useAppStore().loadedExtensions = true
+        useAppStore().extensionsLoaded = true
     })
 }

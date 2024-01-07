@@ -46,7 +46,7 @@ export type RootState = {
     /**
      * Whether the extensions have been loaded.
      */
-    loadedExtensions: boolean
+    extensionsLoaded: boolean
 }
 
 export const useAppStore = defineStore('app', {
@@ -58,7 +58,7 @@ export const useAppStore = defineStore('app', {
             },
             navItems: [],
             notifications: [],
-            loadedExtensions: false
+            extensionsLoaded: false
         }) as RootState,
     actions: {
         /**

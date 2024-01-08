@@ -1,4 +1,4 @@
-import { buildHuffmanTree } from './huffman'
+import { HuffmanNode, buildHuffmanTree, levelOrderTraversal } from './huffman'
 import { Participant } from './participant'
 
 interface TournamentOptionsBasis {
@@ -16,19 +16,16 @@ interface SingleStageTournamentOptionsBasis extends TournamentOptionsBasis {
     type: 'single stage'
 }
 
-interface SingleEliminationTournamentOptions extends SingleStageTournamentOptionsBasis {
+export interface SingleEliminationTournamentOptions extends SingleStageTournamentOptionsBasis {
     format: 'single elimination'
 }
 
-abstract class TournamentBasis<
-    Round extends TournamentRound<Round>,
-    Options extends TournamentOptionsBasis
-> {
+abstract class TournamentBasis<Options extends TournamentOptionsBasis> {
     public name: string
-    public rounds: Round | null = null
     public description = ''
 
     public readonly options: Options
+    public readonly rounds: { label: string; matches: TournamentMatch[] }[] = []
 
     constructor(options: Options) {
         this.name = options.name
@@ -38,15 +35,14 @@ abstract class TournamentBasis<
     }
 }
 
-abstract class TournamentRound<R extends TournamentRound<R>> {
-    public winner: Participant | null = null
+export class TournamentMatch {
+    public left?: Participant
+    public right?: Participant
+    public winner?: Participant
 
-    public left: Participant | null = null
-    public right: Participant | null = null
-
-    public next: TournamentRound<R> | null = null
-    public prevLeft: TournamentRound<R> | null = null
-    public prevRight: TournamentRound<R> | null = null
+    public next?: TournamentMatch
+    public prevLeft?: TournamentMatch
+    public prevRight?: TournamentMatch
 
     constructor(left?: Participant, right?: Participant) {
         if (left) this.left = left
@@ -65,33 +61,65 @@ abstract class TournamentRound<R extends TournamentRound<R>> {
         if (type === 'left') this.winner = this.left
         else this.winner = this.right
     }
+
+    public isLeafMatch() {
+        return !this.left && !this.right
+    }
+
+    public static transform(huffmanTree: HuffmanNode<Participant>) {
+        const root = new TournamentMatch()
+        const queue: TournamentMatch[] = [root]
+        const huffmanQueue: HuffmanNode<Participant>[] = [huffmanTree]
+
+        while (huffmanQueue.length) {
+            const rootMatch = queue.shift()!
+            const huffmanNode = huffmanQueue.shift()!
+            const leftHuffman = huffmanNode.left
+            const rightHuffman = huffmanNode.right
+
+            if (leftHuffman) {
+                if (leftHuffman.isLeafNode()) {
+                    rootMatch.left = leftHuffman.value
+                } else {
+                    const leftMatch = new TournamentMatch()
+                    rootMatch.prevLeft = leftMatch
+                    leftMatch.next = rootMatch
+                    queue.push(leftMatch)
+                    huffmanQueue.push(leftHuffman)
+                }
+            }
+
+            if (rightHuffman) {
+                if (rightHuffman.isLeafNode()) {
+                    rootMatch.right = rightHuffman.value
+                } else {
+                    const rightMatch = new TournamentMatch()
+                    rootMatch.prevRight = rightMatch
+                    rightMatch.next = rootMatch
+                    queue.push(rightMatch)
+                    huffmanQueue.push(rightHuffman)
+                }
+            }
+        }
+        console.log(root)
+        return root
+    }
 }
 
-export class SingleEliminationTournament extends TournamentBasis<
-    SingleEliminationTournamentRound,
-    SingleEliminationTournamentOptions
-> {
-    public rootRound: SingleEliminationTournamentRound
-    constructor(options: SingleEliminationTournamentOptions) {
+export class SingleEliminationTournament extends TournamentBasis<TournamentOptions> {
+    public rootMatch: TournamentMatch
+
+    constructor(options: TournamentOptions) {
         super(options)
-        this.rootRound = new SingleEliminationTournamentRound()
+        this.rootMatch = new TournamentMatch()
     }
 
-    public buildRoundTree(participants: Participant[]) {
-        return buildHuffmanTree(
-            participants.reverse().map((p) => p.name),
-            participants.map(() => 1)
-        )
+    public generateMatches(participants: Participant[]) {
+        return TournamentMatch.transform(buildHuffmanTree(participants.reverse()))
     }
 }
 
-export class SingleEliminationTournamentRound extends TournamentRound<SingleEliminationTournamentRound> {
-    constructor(left?: Participant, right?: Participant) {
-        super(left, right)
-    }
-}
-
-interface DoubleEliminationTournamentOptions extends SingleStageTournamentOptionsBasis {
+export interface DoubleEliminationTournamentOptions extends SingleStageTournamentOptionsBasis {
     format: 'double elimination'
     /**
      * Host a single stage double elimination tournament with participants starting in the losers bracket.
@@ -105,18 +133,9 @@ interface DoubleEliminationTournamentOptions extends SingleStageTournamentOption
     grandFinal?: 'none' | '1 match' | '1-2 matches'
 }
 
-export class DoubleEliminationTournament extends TournamentBasis<
-    DoubleEliminationTournamentRound,
-    DoubleEliminationTournamentOptions
-> {
+export class DoubleEliminationTournament extends TournamentBasis<DoubleEliminationTournamentOptions> {
     constructor(options: DoubleEliminationTournamentOptions) {
         super(options)
-    }
-}
-
-export class DoubleEliminationTournamentRound extends TournamentRound<DoubleEliminationTournamentRound> {
-    constructor(left: Participant, right: Participant) {
-        super(left, right)
     }
 }
 
@@ -156,5 +175,4 @@ export function createTournament(options: TournamentOptions) {
             case 'double elimination':
                 return new DoubleEliminationTournament(options)
         }
-    return null
 }

@@ -10,4 +10,4 @@ export interface IStarName extends IName {
     star?: boolean
 }
 
-export interface IStarNameResult extends Required<IStarName> {}
+export interface IStarNameResult extends Required<IStarName & ICommonResult> {}

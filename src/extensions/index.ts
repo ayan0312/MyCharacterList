@@ -91,7 +91,7 @@ export class Extension implements ExtensionRecordRaw {
     public readonly component?: ExtensionRecordComponentOptions
 
     public loaded = false
-    public removeRoute: (() => void) | null = null
+    public removeRoute?: () => void
 
     constructor(raw: ExtensionRecordRaw) {
         this.name = raw.name

@@ -11,9 +11,9 @@ import { CharacterService } from 'src/apis/character'
 import { useAxiosErrorHandler } from 'src/shared/https'
 import type { ICharacterPatchedResult } from 'src/apis/interface/character.interface'
 
-import { drawBinaryTree } from './editor'
 import { createTournament } from './tournament'
 import { ParticipantManager } from './participant'
+import { Editor } from './editor'
 
 const app = shallowRef<PIXI.Application | null>(null)
 const theme = useTheme()
@@ -67,8 +67,9 @@ watchEffect(() => {
                 properties: char
             })
         )
-        const huffmanTree = tournament.buildRoundTree(manager.slice())
-        drawBinaryTree(app.value, huffmanTree, app.value.renderer.width / 2.5, 50)
+        const huffmanTree = tournament.generateMatches(manager.slice())
+        const editor = new Editor(app.value)
+        editor.draw(huffmanTree, app.value.renderer.width / 2.5, 50)
     }
 })
 </script>

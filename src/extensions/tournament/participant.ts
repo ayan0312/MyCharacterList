@@ -6,14 +6,14 @@ interface ParticipantOptions {
     name: string
     team?: boolean
     avatar: string
-    properties?: ICharacterPatchedResult
+    properties: ICharacterPatchedResult
 }
 
 export class Participant {
     public readonly name: string
     public readonly team: boolean
     public readonly avatar: string
-    public readonly properties?: ICharacterPatchedResult
+    public readonly properties: ICharacterPatchedResult
 
     constructor(options: ParticipantOptions) {
         this.name = options.name

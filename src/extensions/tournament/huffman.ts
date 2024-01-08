@@ -22,7 +22,10 @@ export class HuffmanNode<T = any> {
  * @param frequencies The frequencies of the characters. If not provided, all characters are assumed to have the same frequency
  * @returns The root node of the Huffman tree
  */
-export function buildHuffmanTree<T>(characters: T[], frequencies?: number[]) {
+export function buildHuffmanTree<T>(
+    characters: T[],
+    frequencies?: number[]
+): HuffmanNode<T> | undefined {
     const nodes: HuffmanNode<T>[] = []
     for (let i = 0; i < characters.length; i++) {
         const node = new HuffmanNode<T>(frequencies ? frequencies[i] : 1, characters[i])

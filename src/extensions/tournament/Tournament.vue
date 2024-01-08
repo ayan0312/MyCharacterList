@@ -11,9 +11,8 @@ import { CharacterService } from 'src/apis/character'
 import { useAxiosErrorHandler } from 'src/shared/https'
 import type { ICharacterPatchedResult } from 'src/apis/interface/character.interface'
 
-import { createTournament } from './tournament'
+import { Bracket } from './bracket'
 import { ParticipantManager } from './participant'
-import { Editor } from './editor'
 
 const app = shallowRef<PIXI.Application | null>(null)
 const theme = useTheme()
@@ -55,11 +54,7 @@ watchEffect(() => {
 watchEffect(() => {
     if (app.value && canvas.value && characters.value) {
         const manager = new ParticipantManager()
-        const tournament = createTournament({
-            name: 'Single Elimination Test',
-            type: 'single stage',
-            format: 'single elimination'
-        })
+        const bracket = new Bracket(app.value)
         characters.value.forEach((char) =>
             manager.add({
                 name: char.name,
@@ -67,11 +62,11 @@ watchEffect(() => {
                 properties: char
             })
         )
-        const huffmanTree = tournament.generateMatches(manager.slice())
-        const editor = new Editor(app.value)
-        editor.draw(huffmanTree, app.value.renderer.width / 2.5, 50)
+
+        bracket.drawTournament(manager)
     }
 })
 </script>
 
 <style scoped lang="sass"></style>
+./bracket

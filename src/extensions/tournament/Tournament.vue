@@ -3,52 +3,72 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect, shallowRef, onMounted } from 'vue'
 import * as PIXI from 'pixi.js'
-import { BinaryTree, drawBinaryTree } from './editor'
 import { useTheme } from 'vuetify'
-import { watchEffect } from 'vue'
+
 import { CharacterService } from 'src/apis/character'
 import { useAxiosErrorHandler } from 'src/shared/https'
+import type { ICharacterPatchedResult } from 'src/apis/interface/character.interface'
 
-let app: PIXI.Application<PIXI.ICanvas> | null = null
+import { drawBinaryTree } from './editor'
+import { createTournament } from './tournament'
+import { ParticipantManager } from './participant'
+
+const app = shallowRef<PIXI.Application | null>(null)
 const theme = useTheme()
 const canvas = ref<HTMLCanvasElement | null>(null)
+const characters = shallowRef<ICharacterPatchedResult[] | null>(null)
 
 CharacterService.search({
     page: 1,
-    size: 10,
+    size: 13,
     orderBy: {
         sort: 'created',
-        order: 'DESC'
+        order: 'ASC'
     }
 })
     .then(({ data }) => {
         if (!data.success) return
-        console.log(data.result)
+        characters.value = data.result.rows
     })
     .catch(useAxiosErrorHandler())
 
-watchEffect(() => {
-    const colors = theme.current.value.colors
-    if (app) app.renderer.background.color = colors.background
+onMounted(() => {
+    if (!canvas.value) return
+    const parent = canvas.value.parentElement || canvas.value
+    app.value = new PIXI.Application({
+        view: canvas.value,
+        resizeTo: parent,
+        background: theme.current.value.colors.background
+    })
 })
 
-onMounted(() => {
-    if (canvas.value) {
-        const parent = canvas.value.parentElement || canvas.value
-        app = new PIXI.Application({
-            view: canvas.value,
-            resizeTo: parent,
-            background: theme.current.value.colors.background
+watchEffect(() => {
+    const themeBackground = theme.current.value.colors.background
+    if (app.value) {
+        const appBackground = app.value.renderer.background.color
+        if (appBackground != themeBackground) app.value.renderer.background.color = themeBackground
+    }
+})
+
+watchEffect(() => {
+    if (app.value && canvas.value && characters.value) {
+        const manager = new ParticipantManager()
+        const tournament = createTournament({
+            name: 'Single Elimination Test',
+            type: 'single stage',
+            format: 'single elimination'
         })
-
-        const binaryTree = new BinaryTree()
-        binaryTree.insert(8)
-        binaryTree.insert(3)
-
-        if (binaryTree.root !== null)
-            drawBinaryTree(app, binaryTree.root, app.renderer.width / 2.5, 50)
+        characters.value.forEach((char) =>
+            manager.add({
+                name: char.name,
+                avatar: char.xs.avatar,
+                properties: char
+            })
+        )
+        const huffmanTree = tournament.buildRoundTree(manager.slice())
+        drawBinaryTree(app.value, huffmanTree, app.value.renderer.width / 2.5, 50)
     }
 })
 </script>

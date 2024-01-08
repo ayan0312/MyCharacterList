@@ -1,21 +1,19 @@
-export interface ISuccessArrayResponse<T = any> {
+export interface ISuccessArrayResponse<T extends any[]> {
     code: number
     result: {
-        rows: T[]
+        rows: T
         total: number
     }
     success: true
     message: string
 }
 
-export interface ISuccessPlainResponse<T = any> {
+export interface ISuccessPlainResponse<T> {
     code: number
     result: T
     success: true
     message: string
 }
-
-export type ISuccessResponse<T = any> = ISuccessPlainResponse<T> | ISuccessArrayResponse<T>
 
 export interface IFailedResponse {
     code: number
@@ -26,4 +24,8 @@ export interface IFailedResponse {
     timestamp: number
 }
 
-export type IResponse<T = any> = ISuccessResponse<T> | IFailedResponse
+export type ISuccessResponse<T> = T extends any[]
+    ? ISuccessArrayResponse<T>
+    : ISuccessPlainResponse<T>
+
+export type IResponse<T> = ISuccessResponse<T> | IFailedResponse

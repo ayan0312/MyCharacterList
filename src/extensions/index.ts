@@ -20,6 +20,10 @@ export interface ExtensionRecordRaw {
      */
     uuid: string
     /**
+     * The view of the extension.
+     */
+    view?: HTMLElement
+    /**
      * The i18n options.
      */
     i18n?: ExtensionRecordI18nOptions
@@ -81,83 +85,28 @@ export class Extension implements ExtensionRecordRaw {
     public readonly version: number
 
     public readonly i18n?: ExtensionRecordI18nOptions
+    public readonly view?: HTMLElement
     public readonly route?: RouteRecordRaw
     public readonly navItems?: ListItem[]
     public readonly component?: ExtensionRecordComponentOptions
 
-    private readonly handler: ExtensionHandler
+    public loaded = false
+    public removeRoute: (() => void) | null = null
 
-    private loaded = false
-    private removeRoute: (() => void) | null = null
-
-    constructor(handler: ExtensionHandler, raw: ExtensionRecordRaw) {
-        this.handler = handler
-
+    constructor(raw: ExtensionRecordRaw) {
         this.name = raw.name
         this.uuid = raw.uuid
         this.version = raw.version
 
         if (raw.i18n) this.i18n = raw.i18n
+        if (raw.view) this.view = raw.view
         if (raw.route) this.route = raw.route
-        if (raw.navItems) this.navItems = raw.navItems
+        if (raw.navItems)
+            this.navItems = raw.navItems.map((items) => ({
+                uuid: this.uuid,
+                ...items
+            }))
         if (raw.component) this.component = raw.component
-    }
-
-    /**
-     * Toggle the extension.
-     */
-    public toggle() {
-        if (this.loaded) this.unload()
-        else this.load()
-    }
-
-    /**
-     * Load the extension.
-     */
-    public load() {
-        if (this.loaded) return
-        if (this.i18n) {
-            const { root, messages } = this.i18n
-            for (const locale in messages) {
-                const message = messages[locale]
-                i18n.global.mergeLocaleMessage(locale, {
-                    [root]: message
-                })
-            }
-        }
-        if (this.route) this.removeRoute = router.addRoute(this.route)
-        if (this.navItems)
-            this.handler.store.addNavItems(
-                this.navItems.map((item) => ({
-                    uuid: this.uuid,
-                    ...item
-                }))
-            )
-        if (this.component)
-            for (const key in this.component)
-                this.handler.app.component(
-                    `${this.component.root}${key}`,
-                    this.component.components[key]
-                )
-        this.loaded = true
-    }
-
-    /**
-     * Unload the extension.
-     */
-    public unload() {
-        if (!this.loaded) return
-        this.handler.store.filterNavItems((item) => item.uuid !== this.uuid)
-        if (this.removeRoute) this.removeRoute()
-        this.loaded = false
-    }
-
-    /**
-     * Force unload the extension.
-     */
-    public forceUnload() {
-        this.loaded = true
-        this.unload()
     }
 }
 
@@ -184,7 +133,7 @@ export class ExtensionHandler {
             )
             return
         }
-        const extension = new Extension(this, raw)
+        const extension = new Extension(raw)
         this.map.set(extension.uuid, extension)
     }
 
@@ -198,8 +147,47 @@ export class ExtensionHandler {
             console.warn('Unknown extension: ' + uuid)
             return
         }
-        extension.unload()
+        this.unload(extension)
         this.map.delete(extension.uuid)
+    }
+
+    /**
+     * Toggle the extension.
+     */
+    public toggle(extension: Extension) {
+        if (extension.loaded) this.unload(extension)
+        else this.load(extension)
+    }
+
+    /**
+     * Load the extension.
+     */
+    public load(extension: Extension) {
+        if (extension.loaded) return
+        if (extension.view) return this.loadView(extension.view)
+        if (extension.i18n) this.loadI18n(extension.i18n)
+        if (extension.route) extension.removeRoute = this.loadRoute(extension.route)
+        if (extension.navItems) this.loadNavItems(extension.navItems)
+        if (extension.component) this.loadComponent(extension.component)
+        extension.loaded = true
+    }
+
+    /**
+     * Unload the extension.
+     */
+    public unload(extension: Extension) {
+        if (!extension.loaded) return
+        this.store.filterNavItems((item) => item.uuid !== extension.uuid)
+        if (extension.removeRoute) extension.removeRoute()
+        extension.loaded = false
+    }
+
+    /**
+     * Force unload the extension.
+     */
+    public forceUnload(extension: Extension) {
+        extension.loaded = true
+        this.unload(extension)
     }
 
     /**
@@ -208,9 +196,9 @@ export class ExtensionHandler {
     public loadAll() {
         for (const extension of this.map.values()) {
             try {
-                extension.load()
+                this.load(extension)
             } catch (err) {
-                extension.forceUnload()
+                this.forceUnload(extension)
                 if (err instanceof Error) this.store.snackbar(err.message, { color: 'error' })
                 else this.store.snackbar('unknown error', { color: 'error' })
             }
@@ -221,7 +209,55 @@ export class ExtensionHandler {
      * Unload all extensions.
      */
     public unloadAll() {
-        for (const extension of this.map.values()) extension.unload()
+        for (const extension of this.map.values()) this.unload(extension)
+    }
+
+    /**
+     * Load the view.
+     * @param view The view
+     */
+    public loadView(view: HTMLElement) {
+        console.warn(view)
+        // TODO
+    }
+
+    /**
+     * Load the i18n.
+     * @param i18nOptions The i18n options
+     */
+    public loadI18n(i18nOptions: ExtensionRecordI18nOptions) {
+        const { root, messages } = i18nOptions
+        for (const locale in messages) {
+            const message = messages[locale]
+            i18n.global.mergeLocaleMessage(locale, {
+                [root]: message
+            })
+        }
+    }
+
+    /**
+     * Load the route.
+     * @param route The route
+     */
+    public loadRoute(route: RouteRecordRaw) {
+        return router.addRoute(route)
+    }
+
+    /**
+     * Load the nav items.
+     * @param navItems The nav items
+     */
+    public loadNavItems(navItems: ListItem[]) {
+        this.store.addNavItems(navItems)
+    }
+
+    /**
+     * Load the component.
+     * @param component The component options
+     */
+    public loadComponent(component: ExtensionRecordComponentOptions) {
+        for (const key in component.components)
+            this.app.component(`${component.root}${key}`, component.components[key])
     }
 
     /**
